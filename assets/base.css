@@ -1,0 +1,273 @@
+/* ═══════════════════════════════════════════════════════════════════
+   NUTSTYLE — base.css  (requires tokens.css; fonts via next/font or
+   fonts-standalone.css)
+   Section 1 is lifted from AVN Hub's globals.css (class names kept
+   identical so patterns port back and forth).
+   Section 2 ("extras") are small generic controls derived from AVN Hub's
+   existing button/segmented/dialog patterns, for apps that need them
+   outside a dashboard. They follow the same rules; they are not in AVN Hub.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── 1. FROM AVN HUB ─────────────────────────────────────────────── */
+
+html,
+body { height: 100%; }
+
+html { font-size: 17px; }
+
+body {
+  background: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-weight: 500;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
+}
+
+/* outer bezel — whole-app frame */
+.frame {
+  background: var(--bg-page);
+  border: 1.5px solid var(--border);
+  border-radius: 22px;
+  padding: 16px;
+  box-shadow: 4px 4px 0 var(--shadow);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* sticker card */
+.block {
+  position: relative;
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 14px 16px;
+  border: 1.5px solid var(--border);
+  box-shadow: 3px 3px 0 var(--shadow);
+  overflow: hidden;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.3s ease;
+}
+.block.accent-left { border-left: 3px solid var(--accent-orange); }
+.block:hover { border-color: var(--accent-orange); box-shadow: 5px 5px 0 var(--shadow); }
+
+/* uppercase DotGothic label — role: LABEL (uses --text-muted-dim) */
+.block-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-dot-gothic), monospace;
+  font-size: var(--fs-label);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted-dim);
+  margin-bottom: 8px;
+}
+
+/* primary data value — role: CONTENT (uses --text-muted / primary) */
+.block-value {
+  font-size: var(--fs-lead);
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.block-value.accent { color: var(--accent-orange); }
+.block-value.teal   { color: var(--accent-cyan); }
+
+.block-sub { font-size: var(--fs-body); color: var(--text-muted); }
+
+/* headline stat — the largest text on the page */
+.block-stat {
+  font-family: var(--font-dot-gothic), monospace;
+  font-size: var(--fs-stat);
+  line-height: 1;
+  color: var(--accent-cyan);
+  margin-bottom: 4px;
+}
+.block-stat.accent { color: var(--accent-orange); }
+
+/* theme toggle (round, 22px) */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  background: transparent;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.theme-toggle:hover { color: var(--accent-orange); border-color: var(--accent-orange); }
+
+/* segmented option buttons */
+.seg-row { display: flex; flex-wrap: wrap; gap: 4px; }
+.seg-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-dot-gothic), monospace;
+  font-size: var(--fs-micro);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+.seg-btn:hover:not(.active) { color: var(--accent-orange); border-color: var(--accent-orange); }
+.seg-btn.active { background: var(--accent-orange); border-color: var(--accent-orange); color: var(--badge-text); }
+
+/* form controls (from .wset-select / .wset-input) */
+.wset-select,
+.wset-input {
+  padding: 3px 6px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-nested);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: var(--fs-body);
+}
+input[type="checkbox"] { accent-color: var(--accent-orange); cursor: pointer; }
+
+/* settings-style section header inside a panel */
+.wset-section {
+  font-family: var(--font-dot-gothic), monospace;
+  font-size: var(--fs-micro);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted-dim);
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+  margin: 8px 0 6px;
+}
+
+/* confirmation dialog */
+.hub-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: color-mix(in srgb, var(--bg-page) 70%, transparent);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.hub-dialog {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 5px 5px 0 var(--shadow);
+  padding: 22px 24px 20px;
+  max-width: 360px;
+  width: 100%;
+}
+.hub-dialog-title {
+  font-family: var(--font-dot-gothic), monospace;
+  font-size: var(--fs-label);
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+.hub-dialog-body {
+  font-size: var(--fs-body);
+  line-height: 1.55;
+  color: var(--text-muted);
+  margin: 0 0 18px;
+}
+.hub-dialog-actions { display: flex; gap: 8px; justify-content: flex-end; }
+.hub-dialog-cancel,
+.hub-dialog-confirm {
+  font-family: var(--font-dot-gothic), monospace;
+  font-size: var(--fs-micro);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.hub-dialog-cancel {
+  border: 1.5px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  transition: border-color 0.15s, color 0.15s;
+}
+.hub-dialog-cancel:hover { border-color: var(--text-muted); color: var(--text-primary); }
+.hub-dialog-confirm {
+  border: 1.5px solid var(--accent-orange);
+  background: var(--accent-orange);
+  color: var(--bg-card);
+  font-weight: 600;
+  transition: background 0.15s, opacity 0.15s;
+}
+.hub-dialog-confirm:hover { opacity: 0.88; }
+
+@keyframes installing-pulse {
+  0%, 100% { opacity: 0.25; transform: scale(0.75); }
+  50%      { opacity: 1;    transform: scale(1.15); }
+}
+
+/* ── 2. EXTRAS (derived, same rules) ─────────────────────────────── */
+
+/* buttons: primary = hub-dialog-confirm, secondary = hub-dialog-cancel,
+   danger uses --status-down */
+.btn {
+  font-family: var(--font-dot-gothic), monospace;
+  font-size: var(--fs-micro);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1.5px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease, opacity 0.15s ease;
+}
+.btn:hover:not(:disabled) { color: var(--accent-orange); border-color: var(--accent-orange); }
+.btn:disabled { color: var(--text-muted-dim); cursor: default; }
+.btn-primary { background: var(--accent-orange); border-color: var(--accent-orange); color: var(--badge-text); font-weight: 600; }
+.btn-primary:hover:not(:disabled) { color: var(--badge-text); opacity: 0.88; }
+.btn-danger:hover:not(:disabled) { color: var(--status-down); border-color: var(--status-down); }
+
+/* status dot + pill */
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted-dim); display: inline-block; }
+.status-dot.up   { background: var(--status-up); }
+.status-dot.down { background: var(--status-down); }
+.status-dot.busy { background: var(--accent-orange); animation: installing-pulse 1.1s ease-in-out infinite; }
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: var(--fs-micro);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+/* console / log well — nested surface, mono, no glow, no scanlines */
+.console {
+  background: var(--bg-nested);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: var(--fs-label);
+  line-height: 1.5;
+  color: var(--text-muted);
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

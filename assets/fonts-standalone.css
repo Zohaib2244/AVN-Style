@@ -1,0 +1,11 @@
+/* Only for projects NOT using next/font. In Next.js, load DotGothic16 and
+   JetBrains_Mono via next/font/google with variable names
+   --font-dot-gothic and --font-jetbrains-mono (see references/porting.md)
+   and do NOT include this file — a :root default here would race the
+   next/font variable class on <html>. */
+@import url("https://fonts.googleapis.com/css2?family=DotGothic16&family=JetBrains+Mono:wght@400;500;600;700&display=swap");
+
+:root {
+  --font-dot-gothic: "DotGothic16";
+  --font-jetbrains-mono: "JetBrains Mono";
+}
