@@ -18,3 +18,9 @@ Sticker cards with hard offset shadows and zero blur, two accent slots, 14 token
 ```
 
 Palettes: ember (default), slate, moss, plum, reef, raspberry, circuit, graphite.
+
+## AVN Hub design (branch `avnhub-design-skill`)
+
+`avnhub-design/` is a second skill: how an AVN Hub screen is assembled — canvas
+(three modes: grid / page / none), the Hub Core dock, the slot grid and widgets.
+Open `avnhub-design/assets/layout-modes.html` for a live demo.

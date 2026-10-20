@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-canvas="page">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AVN Hub layout modes</title>
+<link rel="stylesheet" href="../../assets/fonts-standalone.css">
+<link rel="stylesheet" href="../../assets/tokens.css">
+<link rel="stylesheet" href="../../assets/base.css">
+<style>
+  /* Demo only. Mirrors AVN Hub's globals.css selectors so the patterns port back. */
+  body { overflow: auto; height: auto; min-height: 100%; }
+  .slot-page { max-width: 1800px; margin: 0 auto; padding: 24px 20px; }
+
+  /* page chrome */
+  .page-head, .page-foot { display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; flex-wrap: wrap; padding: 4px 4px 12px; }
+  .page-foot { padding: 12px 4px 4px; color: var(--text-muted-dim); font-size: var(--fs-label); }
+  .page-head h1 { font-family: var(--font-dot-gothic), monospace; font-size: var(--fs-lead);
+    letter-spacing: .04em; margin: 0; }
+  .page-head nav { display: flex; gap: 14px; color: var(--text-muted); font-size: var(--fs-body); }
+
+  /* canvas: .frame + .frame-inner */
+  .frame { position: relative; }
+  @media (min-width: 1024px) {
+    html[data-canvas="page"] .frame { height: calc(100vh - 3rem); }
+    html[data-canvas="page"] .frame-inner { height: 100%; overflow-y: auto; overflow-x: hidden; padding: 8px;
+      scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+  }
+  html[data-canvas="grid"] .frame { height: auto; min-height: 560px; }
+  html[data-canvas="grid"] .frame-inner { padding: 8px 8px 44px; }   /* room for the dock */
+  html[data-canvas="none"] .frame { background: transparent; border-color: transparent; box-shadow: none; padding: 0; }
+  html[data-canvas="none"] .frame-inner { padding: 8px 8px 60px; }
+
+  /* backdrop dial (canvas) */
+  html[data-backdrop="blur"] .frame { background: color-mix(in srgb, var(--bg-page) 55%, transparent); backdrop-filter: blur(18px); }
+  html[data-backdrop="glass"] .frame { background: color-mix(in srgb, var(--bg-page) 35%, transparent);
+    backdrop-filter: blur(26px) saturate(1.7);
+    box-shadow: 4px 4px 0 var(--shadow), inset 0 1px 0 color-mix(in srgb, var(--text-primary) 22%, transparent); }
+  html[data-backdrop="transparent"] .frame { background: transparent; }
+  html[data-canvas="none"] .frame { backdrop-filter: none; }
+
+  .wallpaper-layer { position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--accent-cyan) 22%, var(--bg-page)) 0 24px,
+      color-mix(in srgb, var(--accent-orange) 18%, var(--bg-page)) 24px 48px); display: none; }
+  html[data-wall="on"] .wallpaper-layer { display: block; }
+
+  /* slot frame: left | center(central base / base) | right */
+  .slot-frame { display: grid; grid-template-columns: 2fr 3fr 2fr; gap: 12px; }
+  .slot-center { display: grid; grid-template-rows: 7fr 3fr; gap: 12px; min-height: 0; }
+  .slot-region { display: grid; gap: 12px; min-height: 0; }
+  .r-left, .r-right { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 96px; }
+  .r-base { grid-template-columns: repeat(3, 1fr); grid-auto-rows: 96px; }
+  .r-center { grid-template-columns: 1fr; min-height: 220px; }
+  .slot-cell { display: flex; min-width: 0; }
+  .slot-cell > .block { flex: 1; overflow: hidden; display: flex; flex-direction: column; gap: 4px; }
+  .tag { font-size: var(--fs-micro); color: var(--text-muted-dim); text-transform: uppercase; letter-spacing: .1em; }
+  @media (max-width: 1023px) {
+    .slot-frame, .slot-center { display: flex; flex-direction: column; }
+    .slot-center { order: 1; } .r-left { order: 2; } .r-right { order: 3; }
+    .slot-region { grid-template-columns: 1fr; grid-auto-rows: minmax(96px, auto); }
+    .slot-cell { grid-column: 1 / -1 !important; grid-row: auto !important; }
+  }
+
+  /* the dock */
+  .hub-core-deck { position: absolute; inset: 0; z-index: 100; pointer-events: none; }
+  html[data-canvas="none"] .hub-core-deck { position: fixed; }
+  .hub-core-bar { position: absolute; left: 0; right: 0; bottom: 10px; width: fit-content;
+    max-width: calc(100% - 16px); margin-inline: auto; display: flex; align-items: center; flex-wrap: wrap;
+    justify-content: center; gap: 4px; padding: 6px; pointer-events: auto;
+    background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 14px; box-shadow: 4px 4px 0 var(--shadow);
+    transform-origin: 50% 100%;
+    transition: opacity .18s ease, transform .24s cubic-bezier(.33,1,.68,1), border-color .2s ease; }
+  .hub-core-deck:not(.deck-open) .hub-core-bar { opacity: 0; pointer-events: none; transform: translateY(6px) scale(.9); }
+  .hub-core-deck[data-edit="true"] .hub-core-bar,
+  .hub-core-deck[data-edit="true"] .hub-core-stub { border-color: var(--accent-orange); }
+  .hub-core-stub { position: absolute; left: 0; right: 0; bottom: -13px; width: fit-content; margin-inline: auto;
+    display: flex; align-items: center; justify-content: center; gap: 5px; height: 24px; padding: 0 11px;
+    pointer-events: auto; cursor: pointer; background: var(--bg-card); border: 1.5px solid var(--border);
+    border-radius: 12px; box-shadow: 3px 3px 0 var(--shadow); transform-origin: 50% 100%;
+    transition: opacity .16s ease, transform .22s cubic-bezier(.33,1,.68,1), border-color .2s ease; }
+  html[data-canvas="none"] .hub-core-stub { bottom: 6px; }
+  .hub-core-deck.deck-open .hub-core-stub { opacity: 0; pointer-events: none; transform: translateY(-12px) scale(.72); }
+  .stub-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--text-muted-dim); }
+  .stub-dot.active { background: var(--accent-cyan); }
+  .hub-core-stub:hover, .hub-core-stub:focus-visible { border-color: var(--accent-orange); outline: none; }
+  .dk-btn { height: 32px; padding: 0 9px; border-radius: 8px; border: 1.5px solid transparent; background: transparent;
+    color: var(--text-muted); font: inherit; font-size: var(--fs-label); cursor: pointer; }
+  .dk-btn:hover, .dk-btn:focus-visible, .dk-btn.active { color: var(--accent-orange); border-color: var(--accent-orange); outline: none; }
+  .dk-btn.active { background: color-mix(in srgb, var(--accent-orange) 10%, transparent); }
+  .dk-div { width: 0; height: 20px; margin: 0 3px; border-left: 1px solid var(--border); }
+
+  /* panel opens UPWARD, centred on the dock */
+  .hub-core-panel { position: absolute; left: 0; right: 0; bottom: 56px; margin-inline: auto; width: 300px;
+    pointer-events: auto; padding: 12px 14px; background: var(--bg-card); border: 1.5px solid var(--accent-cyan);
+    border-radius: 12px; box-shadow: 5px 5px 0 var(--shadow); display: none; }
+  .hub-core-deck.panel-open .hub-core-panel { display: block; }
+  .hub-setting-label { display: block; font-family: var(--font-dot-gothic), monospace; font-size: var(--fs-label);
+    letter-spacing: .14em; text-transform: uppercase; color: var(--text-muted-dim); margin: 10px 0 6px; }
+  .hub-setting-label:first-child { margin-top: 0; }
+
+  /* edit-mode affordance, to show what the switch does */
+  .hub-core-deck[data-edit="true"] ~ .frame-inner .slot-cell > .block,
+  .frame[data-edit="true"] .slot-cell > .block { outline: 1.5px dashed var(--accent-orange); outline-offset: 2px; }
+</style>
+</head>
+<body>
+<div class="wallpaper-layer"></div>
+
+<main class="slot-page">
+  <header class="page-head" id="head-outer"></header>
+
+  <div id="mount"></div>
+
+  <footer class="page-foot" id="foot-outer"></footer>
+</main>
+
+<template id="tpl-head">
+  <h1>avns2 hub</h1>
+  <nav><span>home</span><span>media</span><span>cloud</span></nav>
+</template>
+<template id="tpl-foot">
+  <span>v2.1 · canvas: <b id="mode-readout">page</b></span><span>press ctrl+k for the palette</span>
+</template>
+
+<template id="tpl-canvas">
+  <div class="frame" id="frame">
+    <div class="hub-core-deck" id="deck" data-edit="false">
+      <div class="hub-core-panel" id="panel">
+        <span class="hub-setting-label">canvas mode</span>
+        <div class="seg-row" id="seg-mode">
+          <button class="seg-btn" data-v="grid">grid</button>
+          <button class="seg-btn" data-v="page">page</button>
+          <button class="seg-btn" data-v="none">none</button>
+        </div>
+        <span class="hub-setting-label">canvas backdrop</span>
+        <div class="seg-row" id="seg-backdrop">
+          <button class="seg-btn" data-v="solid">solid</button>
+          <button class="seg-btn" data-v="blur">blur</button>
+          <button class="seg-btn" data-v="glass">glass</button>
+          <button class="seg-btn" data-v="transparent">clear</button>
+        </div>
+        <span class="hub-setting-label">wallpaper</span>
+        <div class="seg-row" id="seg-wall">
+          <button class="seg-btn" data-v="off">off</button>
+          <button class="seg-btn" data-v="on">stripes</button>
+        </div>
+        <span class="hub-setting-label">mode · palette</span>
+        <div class="seg-row" id="seg-theme">
+          <button class="seg-btn" data-v="dark">dark</button>
+          <button class="seg-btn" data-v="light">light</button>
+        </div>
+        <div class="seg-row" id="seg-pal" style="margin-top:6px"></div>
+      </div>
+
+      <div class="hub-core-bar" id="bar">
+        <button class="dk-btn active" data-canvas="0">home</button>
+        <button class="dk-btn" data-canvas="1">media</button>
+        <button class="dk-btn" data-canvas="2">work</button>
+        <span class="dk-div"></span>
+        <button class="dk-btn" id="btn-edit" aria-pressed="false">view | edit</button>
+        <button class="dk-btn" id="btn-settings" aria-expanded="false">canvas</button>
+        <button class="dk-btn" id="btn-kbd" aria-label="command palette">ctrl+k</button>
+      </div>
+      <button class="hub-core-stub" id="stub" aria-label="open control deck">
+        <span class="stub-dot active"></span><span class="stub-dot"></span><span class="stub-dot"></span>
+      </button>
+    </div>
+
+    <div class="frame-inner">
+      <div class="slot-frame">
+        <div class="slot-region r-left">
+          <div class="slot-cell" style="grid-column:1/3;grid-row:1/3"><div class="block accent-left"><div class="block-label">card · 2×2</div><div class="block-stat accent">99.8%</div><div class="block-sub">uptime, 24h</div></div></div>
+          <div class="slot-cell"><div class="block"><div class="block-label">badge</div><div class="block-value">12 up</div></div></div>
+          <div class="slot-cell"><div class="block"><div class="block-label">badge</div><div class="block-value teal">0 down</div></div></div>
+          <div class="slot-cell" style="grid-row:4/7"><div class="block"><div class="block-label">column</div><div class="block-sub">jellyfin<br>immich<br>sonarr<br>radarr</div></div></div>
+          <div class="slot-cell" style="grid-row:4/7"><div class="block"><div class="block-label">column</div><div class="block-sub">cpu 14%<br>mem 62%<br>disk 71%</div></div></div>
+        </div>
+
+        <div class="slot-center">
+          <div class="slot-region r-center">
+            <div class="slot-cell"><div class="block"><div class="block-label">hero · central base</div><div class="console">nutbot&gt; all services nominal<br>nutbot&gt; _</div></div></div>
+          </div>
+          <div class="slot-region r-base">
+            <div class="slot-cell" style="grid-column:1/3"><div class="block"><div class="block-label">strip · 2×1</div><div class="block-sub"><span class="pill"><span class="status-dot up"></span>caddy</span> <span class="pill"><span class="status-dot busy"></span>wings</span></div></div></div>
+            <div class="slot-cell"><div class="block"><div class="block-label">badge</div><div class="block-value">3 sessions</div></div></div>
+          </div>
+        </div>
+
+        <div class="slot-region r-right">
+          <div class="slot-cell" style="grid-column:1/3;grid-row:1/5"><div class="block"><div class="block-label">panel · 2×4</div><div class="block-sub">recent activity<br>• radarr grabbed 2 titles<br>• backup skipped (by design)<br>• tailscale up</div></div></div>
+          <div class="slot-cell"><div class="block"><div class="block-label">badge</div><div class="block-value">netdata</div></div></div>
+          <div class="slot-cell"><div class="block"><div class="block-label">badge</div><div class="block-value teal">kuma</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var mount = document.getElementById('mount');
+  var headOuter = document.getElementById('head-outer');
+  var footOuter = document.getElementById('foot-outer');
+  var T = function (id) { return document.getElementById(id).content.cloneNode(true); };
+  var state = { mode: 'page', canvas: 0, edit: false };
+  var deck, frame;
+
+  /* what the canvas wraps is the only thing a mode changes */
+  function build() {
+    mount.innerHTML = ''; headOuter.innerHTML = ''; footOuter.innerHTML = '';
+    var c = T('tpl-canvas'); mount.appendChild(c);
+    frame = document.getElementById('frame'); deck = document.getElementById('deck');
+    var head = T('tpl-head'), foot = T('tpl-foot');
+    if (state.mode === 'page') {                       // chrome INSIDE the bezel
+      var inner = frame.querySelector('.frame-inner');
+      var h = document.createElement('header'); h.className = 'page-head'; h.appendChild(head);
+      var f = document.createElement('footer'); f.className = 'page-foot'; f.appendChild(foot);
+      inner.insertBefore(h, inner.firstChild); inner.appendChild(f);
+      headOuter.hidden = footOuter.hidden = true;
+    } else {                                           // chrome OUTSIDE (grid + none)
+      headOuter.hidden = footOuter.hidden = false;
+      headOuter.appendChild(head); footOuter.appendChild(foot);
+    }
+    var ro = document.getElementById('mode-readout'); if (ro) ro.textContent = state.mode;
+    wire();
+  }
+
+  function seg(id, key, apply) {
+    var el = document.getElementById(id);
+    el.addEventListener('click', function (e) {
+      var b = e.target.closest('.seg-btn'); if (!b) return;
+      apply(b.dataset.v); mark(id, b.dataset.v);
+    });
+  }
+  function mark(id, v) {
+    document.querySelectorAll('#' + id + ' .seg-btn').forEach(function (b) {
+      b.classList.toggle('active', b.dataset.v === v);
+    });
+  }
+
+  var PALS = ['ember', 'slate', 'moss', 'plum', 'reef', 'raspberry', 'circuit', 'graphite'];
+  var cur = { backdrop: 'solid', wall: 'off', theme: 'dark', pal: 'ember' };
+
+  function wire() {
+    var panelOpen = false, hover = false, timer = null;
+    function open() { deck.classList.add('deck-open'); }
+    function close() { if (!panelOpen && !state.edit) deck.classList.remove('deck-open'); }
+    function schedule(fn, ms) { clearTimeout(timer); timer = setTimeout(fn, ms); }
+
+    /* auto-hide: 90ms dwell to open, 500ms grace to close; pinned by panel/edit */
+    var stub = document.getElementById('stub'), bar = document.getElementById('bar');
+    function near(el, r, e) {
+      var b = el.getBoundingClientRect();
+      return e.clientX > b.left - r && e.clientX < b.right + r && e.clientY > b.top - r && e.clientY < b.bottom + r;
+    }
+    if (matchMedia('(pointer:fine)').matches) {
+      document.addEventListener('pointermove', function (e) {
+        if (!deck.isConnected) return;
+        var open_ = deck.classList.contains('deck-open');
+        var inZone = open_ ? near(bar, 18, e) : near(stub, 28, e);
+        if (inZone && !hover) { hover = true; schedule(open, 90); }
+        else if (!inZone && hover) { hover = false; schedule(close, 500); }
+      });
+    }
+    stub.addEventListener('click', open);
+    stub.addEventListener('focus', function () { if (stub.matches(':focus-visible')) open(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { panelOpen = false; syncPanel(); state.edit && 0; clearTimeout(timer); deck.classList.remove('deck-open'); }
+    });
+
+    function syncPanel() {
+      deck.classList.toggle('panel-open', panelOpen);
+      document.getElementById('btn-settings').setAttribute('aria-expanded', panelOpen);
+      document.getElementById('btn-settings').classList.toggle('active', panelOpen);
+    }
+    document.getElementById('btn-settings').onclick = function () { panelOpen = !panelOpen; syncPanel(); };
+    document.getElementById('btn-edit').onclick = function () {
+      state.edit = !state.edit;
+      deck.dataset.edit = state.edit; frame.dataset.edit = state.edit;
+      this.classList.toggle('active', state.edit); this.setAttribute('aria-pressed', state.edit);
+      if (!state.edit) close();
+    };
+    bar.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-canvas]'); if (!b) return;
+      bar.querySelectorAll('[data-canvas]').forEach(function (x) { x.classList.toggle('active', x === b); });
+      var dots = deck.querySelectorAll('.stub-dot');
+      dots.forEach(function (d, i) { d.classList.toggle('active', i === +b.dataset.canvas); });
+    });
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.hub-core-bar, .hub-core-panel, .hub-core-stub') && panelOpen) { panelOpen = false; syncPanel(); close(); }
+    });
+
+    seg('seg-mode', 'mode', function (v) { state.mode = v; root.dataset.canvas = v; build(); reapplyMarks(); });
+    seg('seg-backdrop', 'b', function (v) { cur.backdrop = v; if (v === 'solid') delete root.dataset.backdrop; else root.dataset.backdrop = v; });
+    seg('seg-wall', 'w', function (v) { cur.wall = v; if (v === 'on') root.dataset.wall = 'on'; else delete root.dataset.wall; });
+    seg('seg-theme', 't', function (v) { cur.theme = v; root.dataset.theme = v; });
+    var pr = document.getElementById('seg-pal');
+    PALS.forEach(function (p) { var b = document.createElement('button'); b.className = 'seg-btn'; b.dataset.v = p; b.textContent = p; pr.appendChild(b); });
+    seg('seg-pal', 'p', function (v) { cur.pal = v; if (v === 'ember') delete root.dataset.palette; else root.dataset.palette = v; });
+    reapplyMarks();
+  }
+  function reapplyMarks() {
+    mark('seg-mode', state.mode); mark('seg-backdrop', cur.backdrop); mark('seg-wall', cur.wall);
+    mark('seg-theme', cur.theme); mark('seg-pal', cur.pal);
+  }
+
+  build();
+  /* open the panel + dock once so the first view shows what the demo is for */
+  document.getElementById('deck').classList.add('deck-open');
+  setTimeout(function () { var d = document.getElementById('deck'); if (!d.classList.contains('panel-open')) d.classList.remove('deck-open'); }, 2200);
+})();
+</script>
+</body>
+</html>
