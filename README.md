@@ -19,6 +19,11 @@ avnhub-design/        AVN Hub's own canvas / dock / widget architecture
 board/index.html      live style board: open in a browser
 ```
 
+## Stack
+
+React + TypeScript + Vite, plain CSS (no Tailwind) with Motion for animation, shared
+components in `@avn/ui`. Details: `ux/references/stack.md`.
+
 ## Use it in a project
 
 ```html

@@ -36,6 +36,7 @@ app. Not covered: landing pages, marketing sites, in-game UI, AVN Hub (see
 
 | File | Covers |
 |---|---|
+| `references/stack.md` | the front-end stack: React + TypeScript + Vite, plain CSS, Motion, @avn/ui, TanStack, Radix |
 | `references/process.md` | how to take a request, mockups first, turning complaints into rules, the self-check |
 | `references/foundations.md` | words, accessibility, responsiveness, density (any web app) |
 | `references/shell.md` | app shell: sidebar, sliding highlight, top bar, filter bar, rail and tab bar |
