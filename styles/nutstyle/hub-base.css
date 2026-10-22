@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════════
-   NUTSTYLE — base.css  (requires tokens.css; fonts via next/font or
-   fonts-standalone.css)
+   NUTSTYLE — hub-base.css  (requires tokens.css; fonts via next/font or
+   fonts.css). AVN Hub classes; new apps use ux/assets/components.css
    Section 1 is lifted from AVN Hub's globals.css (class names kept
    identical so patterns port back and forth).
    Section 2 ("extras") are small generic controls derived from AVN Hub's

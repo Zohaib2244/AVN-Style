@@ -7,7 +7,7 @@ description: AVN Hub page architecture — the canvas (frame bezel), the Hub Cor
 
 How an AVN Hub screen is put together. `nutstyle` answers "what does a card look
 like"; this skill answers "where does everything go and how does it behave".
-Read `nutstyle/SKILL.md` first — every colour, size and shadow here is a nutstyle token.
+Read `styles/nutstyle/SKILL.md` first — every colour, size and shadow here is a nutstyle token.
 
 ## The five layers (back to front)
 

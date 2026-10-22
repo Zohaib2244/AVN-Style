@@ -1,5 +1,7 @@
 # Tokens
 
+> Original Nutstyle notes. The current token names are the contract roles in `../tokens.css`; the names below still work as aliases.
+
 14 tokens per palette, each defined for dark and light.
 
 | Token | Role | Ember dark | Ember light |
@@ -20,7 +22,7 @@
 | `--status-down` | failed / attention | `#c84a12` | `#c84a12` |
 
 ## Palettes
-`ember` (default), `slate`, `moss`, `plum`, `reef`, `raspberry`, `circuit`, `graphite` — all in `assets/tokens.css`.
+`ember` (default), `slate`, `moss`, `plum`, `reef`, `raspberry`, `circuit`, `graphite` — all in `tokens.css`.
 
 ## Contrast contract (new palettes must meet it, dark and light)
 - `--text-muted` ≈ **8.0:1** against `--bg-card`

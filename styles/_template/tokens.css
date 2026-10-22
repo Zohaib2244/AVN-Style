@@ -1,0 +1,52 @@
+/* Style template · tokens.css
+   Replace every #LIGHT0 / #DARK00 pair (light first, dark second) and the fonts.
+   Keep the color-mix lines: they derive the soft and text variants. */
+
+:root {
+  color-scheme: dark;
+  --font-px: 'Your Display', ui-monospace, monospace;
+  --font-ui: 'Your Body', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
+  --r-card: 12px; --r-ctl: 9px;
+  /* Style contract: shape and type dials every style must set */
+  --bw: 1px; --shadow-c: transparent; --lift: none; --lift-btn: none;
+  --font-label: var(--font-mono); --font-btn: var(--font-ui); --tt-btn: none; --ls-btn: normal;
+  --num: var(--text); --w-display: 500;
+  --ease: cubic-bezier(.2, .8, .2, 1);
+
+  --bg: light-dark(#LIGHT0, #DARK00);
+  --panel: light-dark(#LIGHT0, #DARK00);
+  --nested: light-dark(#LIGHT0, #DARK00);
+  --raise: light-dark(#LIGHT0, #DARK00);
+  --line: light-dark(#LIGHT0, #DARK00);
+  --line-strong: light-dark(#LIGHT0, #DARK00);
+  --text: light-dark(#LIGHT0, #DARK00);
+  --muted: light-dark(#LIGHT0, #DARK00);
+  --dim: light-dark(#LIGHT0, #DARK00);
+  --accent: light-dark(#LIGHT0, #DARK00);
+  --accent-ink: light-dark(#LIGHT0, #DARK00);
+  --accent-soft: color-mix(in srgb, var(--accent) 13%, var(--panel));
+  --accent-text: color-mix(in srgb, var(--accent) 80%, var(--text));
+  --bar: color-mix(in srgb, var(--accent) 50%, var(--panel));
+  --dot: light-dark(rgba(33, 27, 19, .04), rgba(239, 230, 213, .028));
+
+  --ok: light-dark(#LIGHT0, #DARK00);      /* verified: confirmed by a check */
+  --done: light-dark(#LIGHT0, #DARK00);    /* done, not yet confirmed */
+  --info: light-dark(#LIGHT0, #DARK00);
+  --new: light-dark(#LIGHT0, #DARK00);
+  --hl-orange: var(--accent); --hl-cyan: light-dark(#LIGHT0, #DARK00); --hl-green: var(--ok); --hl-pink: light-dark(#LIGHT0, #DARK00); --hl-violet: var(--new); --hl-gold: var(--warn);
+  --warn: light-dark(#LIGHT0, #DARK00);
+  --bad: light-dark(#LIGHT0, #DARK00);
+  --ok-soft: color-mix(in srgb, var(--ok) 13%, var(--panel));
+  --done-soft: color-mix(in srgb, var(--done) 13%, var(--panel));
+  --info-soft: color-mix(in srgb, var(--info) 13%, var(--panel));
+  --new-soft: color-mix(in srgb, var(--new) 14%, var(--panel));
+  --warn-soft: color-mix(in srgb, var(--warn) 13%, var(--panel));
+  --bad-soft: color-mix(in srgb, var(--bad) 13%, var(--panel));
+}
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) { color-scheme: light; } }
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+
+/* Optional palettes */
+/* :root[data-palette="name"] { --bg: light-dark(…); … every colour role … } */
