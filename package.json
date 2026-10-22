@@ -1,0 +1,15 @@
+{
+  "name": "avn-style",
+  "private": true,
+  "description": "AVN Style: UX rules, styles and the shared @avn/ui React components",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "check": "npm run check-styles && npm run check -w @avn/ui",
+    "check-styles": "node scripts/check-style.mjs --all",
+    "test": "npm test -w @avn/ui",
+    "build": "npm run build -w @avn/ui",
+    "demo": "npm run demo -w @avn/ui"
+  }
+}

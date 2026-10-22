@@ -735,3 +735,13 @@ button.join:hover { box-shadow: inset 0 0 0 1px var(--line-strong); }
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes sheet { from { transform: translateY(100%); } to { transform: none; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* ── Additions used by @avn/ui (React) ─────────────────────────── */
+.note-i.ok .t-i { background: var(--ok-soft); color: var(--ok); }
+.note-i.warn .t-i { background: var(--warn-soft); color: var(--warn); }
+.note-i.bad .t-i { background: var(--bad-soft); color: var(--bad); }
+.note-i.info .t-i { background: var(--info-soft); color: var(--info); }
+.note-i .t-i { display: grid; place-items: center; border-radius: 50%; background: var(--nested); color: var(--muted); }
+.note-i .t-i .ic { width: 12px; height: 12px; }
+.pop-anchor { position: relative; display: inline-flex; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
