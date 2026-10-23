@@ -35,6 +35,9 @@ const PATHS = {
   flame: 'M12 3c1 4 5 5.5 5 10a5 5 0 0 1-10 0c0-2.5 1.5-3.5 2-5.5 1 1 1.5 2 1.5 3 1-2.5 1.5-5 1.5-7.5z',
   checklist: 'M7 4h10a2 2 0 0 1 2 2v14H5V6a2 2 0 0 1 2-2zM9 12l2 2 4-4',
   plus: 'M12 5v14M5 12h14',
+  sun: 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4',
+  moon: 'M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z',
+  monitor: 'M4 4h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zM8 20h8M12 16v4',
 } as const;
 
 export type IconName = keyof typeof PATHS;

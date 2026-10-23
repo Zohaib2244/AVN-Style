@@ -1,7 +1,7 @@
 import { StrictMode, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
-  AccountMenu, AppShell, BarChart, BellButton, Brand, Button, PixelIcon, CommandPalette, Calendar, ConditionEditor, ConfirmDelete, Delta, Drawer, EmptyState, FilterBar,
+  AccountMenu, ThemeSwitch, useTheme, type Theme, AppShell, BarChart, BellButton, Brand, Button, PixelIcon, CommandPalette, Calendar, ConditionEditor, ConfirmDelete, Delta, Drawer, EmptyState, FilterBar,
   FunnelHeadline, FunnelResult, GameSwitcher, HeatStrip, HighlightsBar, Icon, IconButton, Insights, InsightCard, Kpi, Kpis, LoadBar, MultiSelect, NeedsALook,
   NotificationList, NutBotPanel, Page, PageHead, Panel, Pipeline, Popover, RuleBar, SearchButton, SectionLabel, SetupChecklist, ShortcutsDialog, Sidebar, SidebarNav,
   SingleSelect, Skeleton, SurvivalCurve, Tag, TabBar, Timeline, ToastProvider, TopBar, Workspace, useToast, emptyCondition, type CommandItem, type Highlight,
@@ -35,7 +35,7 @@ function setStyle(name: 'avn-family' | 'nutstyle') {
   (document.getElementById('style-skin') as HTMLLinkElement).href = name === 'nutstyle' ? '/nutstyle/skin.css' : '/avn-family/flavour.css';
 }
 
-function Demo() {
+function Demo({ theme, setTheme }: { theme: Theme; setTheme: (t: Theme) => void }) {
   const { toast } = useToast();
   const [page, setPage] = useState('overview');
   const [drawer, setDrawer] = useState(false);
@@ -85,6 +85,7 @@ function Demo() {
           tools={<>
             <SearchButton onClick={() => setPalette(true)} />
             <IconButton icon="refresh" label="Refresh" />
+            <ThemeSwitch variant="button" theme={theme} onChange={setTheme} />
             <BellButton ref={bellBtn} onClick={() => setBell((b) => !b)} />
             <Button size="sm" icon="bot" onClick={() => setNb((o) => !o)}>NutBot</Button>
           </>}
@@ -157,14 +158,18 @@ function Demo() {
 
 function Root() {
   const [style, setS] = useState<'avn-family' | 'nutstyle'>('avn-family');
+  const [theme, setTheme] = useTheme();
   return (
     <ToastProvider>
       <div style={{ display: 'flex', gap: 8, padding: 12 }} id="demo-controls">
         <Button size="sm" onClick={() => { setS('avn-family'); setStyle('avn-family'); }} aria-pressed={style === 'avn-family'}>AVN Family</Button>
         <Button size="sm" onClick={() => { setS('nutstyle'); setStyle('nutstyle'); }} aria-pressed={style === 'nutstyle'}>Nutstyle</Button>
-        <Button size="sm" onClick={() => document.documentElement.setAttribute('data-theme', document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light')}>Toggle theme</Button>
+        <ThemeSwitch theme={theme} onChange={setTheme} />
+        <select aria-label="Palette" defaultValue="" onChange={(e) => { if (e.target.value) document.documentElement.setAttribute('data-palette', e.target.value); else document.documentElement.removeAttribute('data-palette'); }}>
+          <option value="">Default palette</option>{['slate', 'moss', 'hibiscus', 'white'].map((p) => <option key={p} value={p}>{p}</option>)}
+        </select>
       </div>
-      <div style={{ padding: '0 12px 24px' }}><Demo /></div>
+      <div style={{ padding: '0 12px 24px' }}><Demo theme={theme} setTheme={setTheme} /></div>
     </ToastProvider>
   );
 }

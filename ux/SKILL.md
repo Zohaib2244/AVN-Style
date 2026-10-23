@@ -49,5 +49,6 @@ app. Not covered: landing pages, marketing sites, in-game UI, AVN Hub (see
 | `references/tools.md` | command palette, copy link, definitions, shortcuts, setup checklist |
 | `references/assistant.md` | NutBot: the assistant pattern every AVN tool shares |
 | `references/motion.md` | moments, motion budget, what moves and what doesn't |
+| `references/theme.md` | Day / Night / System switch, where it lives, no flash, both looks for every palette |
 
 `../board/index.html` shows every rule working.

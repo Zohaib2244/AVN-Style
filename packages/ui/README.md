@@ -34,6 +34,7 @@ The best worked example is [`demo/main.tsx`](demo/main.tsx) (`npm run demo` from
 | `pixel-icon.tsx` | `PixelIcon` `pixelIconSVG` `PIXEL_ICONS` `ICON_COLORS` |
 | `icons.tsx` | `Icon` (line icons by name) |
 | `context.tsx` | `AppContainerProvider` `useAppContainer` `useAppElement` (so portals render inside the container the layout queries) |
+| `theme.tsx` | `ThemeSwitch` (seg or icon button) `useTheme` `applyTheme` `readTheme` `themeInitScript` (Day / Night / System, no flash) |
 | `cx.ts` | `cx` `fmt` `secs` `relativeTime` `niceStep` |
 
 Props are typed; your editor is the reference. Read the component's test in `test/` for the intended usage.

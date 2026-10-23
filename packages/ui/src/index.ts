@@ -10,3 +10,4 @@ export * from './data';
 export * from './cards';
 export * from './assistant';
 export * from './pixel-icon';
+export * from './theme';

@@ -745,3 +745,10 @@ button.join:hover { box-shadow: inset 0 0 0 1px var(--line-strong); }
 .note-i .t-i .ic { width: 12px; height: 12px; }
 .pop-anchor { position: relative; display: inline-flex; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Day / night switch */
+.theme-seg button { display: inline-flex; align-items: center; gap: 6px; }
+.theme-switching, .theme-switching *, .theme-switching *::before, .theme-switching *::after {
+  transition: background-color .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease), fill .25s var(--ease), stroke .25s var(--ease) !important;
+}
+@media (prefers-reduced-motion: reduce) { .theme-switching, .theme-switching * { transition: none !important; } }

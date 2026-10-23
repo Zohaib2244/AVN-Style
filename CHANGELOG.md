@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.0
+
+- Day / Night / System theme switch: rule (`ux/references/theme.md`), `ThemeSwitch`, `useTheme`, `themeInitScript` in `@avn/ui`, colour fade on switch, `board/day-night.html` (every palette in both).
+
 ## 0.1.0
 
 - Split the old Nutstyle skill into a UX layer (`ux/`), a contract (`contract.md`) and swappable styles (`styles/`).
