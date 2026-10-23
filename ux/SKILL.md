@@ -29,8 +29,9 @@ app. Not covered: landing pages, marketing sites, in-game UI, AVN Hub (see
 7. **Every state has a word**, not just a colour.
 8. **Reversible actions undo from the toast; permanent ones ask you to type the name.**
 9. **Works at three widths** (wide, tablet rail, phone tab bar) and by keyboard.
-10. **Animation has a job and plays once**; only live things loop; all of it stops
-    with reduced motion.
+10. **Animation has a job.** Moments play once; ambient life (a loader, a live dot,
+    a pixel field on an empty state) may loop quietly, one per view, never on data;
+    all of it stops with reduced motion.
 
 ## Read next
 
@@ -48,6 +49,6 @@ app. Not covered: landing pages, marketing sites, in-game UI, AVN Hub (see
 | `references/feedback.md` | loading, errors, toasts, notifications, undo vs confirm, freshness |
 | `references/tools.md` | command palette, copy link, definitions, shortcuts, setup checklist |
 | `references/assistant.md` | NutBot: the assistant pattern every AVN tool shares |
-| `references/motion.md` | moments, motion budget, what moves and what doesn't |
+| `references/motion.md` | moments and ambient life, the two motion budgets, what moves and what doesn't |
 
 `../board/index.html` shows every rule working.

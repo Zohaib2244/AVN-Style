@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState, type ButtonHTMLAttributes, type ReactElement, type ReactNode } from 'react';
-import { useReducedMotion } from 'motion/react';
+import { useEffect, useLayoutEffect, useRef, useState, type ButtonHTMLAttributes, type ReactElement, type ReactNode } from 'react';
+import { animate, motion, useMotionValue, useReducedMotion, useTransform } from 'motion/react';
 import { cx, fmt } from './cx';
 import { Icon, type IconName } from './icons';
 
@@ -57,11 +57,75 @@ export function Button({ variant = 'default', size = 'md', icon, loading, loadin
   );
 }
 
+/**
+ * Segmented control with a rubber thumb: on click the thumb stretches toward the new option
+ * (its leading edge moves first), then the trailing edge catches up and lands with a small squash.
+ * ← → move by keyboard without the stretch. Reduced motion: the thumb jumps.
+ */
 export function Segmented<T extends string>({ options, value, onChange, label }: { options: Array<{ value: T; label: string }>; value: T; onChange: (v: T) => void; label?: string }): ReactElement {
+  const reduce = useReducedMotion();
+  const refs = useRef<Array<HTMLButtonElement | null>>([]);
+  const edgeL = useMotionValue(0);
+  const edgeR = useMotionValue(0);
+  const ready = useRef(false);
+  const index = Math.max(0, options.findIndex((o) => o.value === value));
+  const left = useTransform(edgeL, (l) => `${l}px`);
+  const width = useTransform([edgeL, edgeR], ([l, r]) => `${Math.max(0, (r as number) - (l as number))}px`);
+
+  const slot = (i: number) => { const el = refs.current[i]; return el ? { l: el.offsetLeft, r: el.offsetLeft + el.offsetWidth } : null; };
+
+  useLayoutEffect(() => {
+    const s = slot(index);
+    if (!s) return;
+    const from = { l: edgeL.get(), r: edgeR.get() };
+    if (!ready.current || reduce || (from.l === 0 && from.r === 0)) { edgeL.jump(s.l); edgeR.jump(s.r); ready.current = true; return; }
+    const dir = Math.sign((s.l + s.r) / 2 - (from.l + from.r) / 2) || 1;
+    const [lead, leadTo, trail, trailTo] = dir > 0 ? [edgeR, s.r, edgeL, s.l] : [edgeL, s.l, edgeR, s.r];
+    // Stretch: the leading edge goes first; the trailing edge waits, then lands with a 3 px squash.
+    animate(lead, leadTo, { type: 'spring', duration: 0.32, bounce: 0.18 });
+    const a = animate(trail, trailTo + dir * 3, { type: 'spring', duration: 0.3, bounce: 0, delay: 0.1 });
+    a.then(() => { if (slot(index)?.l === s.l) animate(trail, trailTo, { type: 'spring', duration: 0.16, bounce: 0 }); });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [index, reduce]);
+
+  useEffect(() => {
+    const el = refs.current[index]?.parentElement;
+    if (!el || typeof ResizeObserver === 'undefined') return undefined;
+    const ro = new ResizeObserver(() => { const s = slot(index); if (s) { edgeL.jump(s.l); edgeR.jump(s.r); } });
+    ro.observe(el);
+    return () => ro.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [index]);
+
+  const onKey = (e: React.KeyboardEvent) => {
+    const last = options.length - 1;
+    let next: number | null = null;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = Math.min(last, index + 1);
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') next = Math.max(0, index - 1);
+    else if (e.key === 'Home') next = 0;
+    else if (e.key === 'End') next = last;
+    if (next === null || next === index) return;
+    e.preventDefault();
+    const s = slot(next); if (s) { edgeL.jump(s.l); edgeR.jump(s.r); }
+    onChange(options[next]!.value);
+    refs.current[next]?.focus();
+  };
+
   return (
-    <div className="seg" role="group" aria-label={label}>
-      {options.map((o) => (
-        <button key={o.value} type="button" className={o.value === value ? 'on' : undefined} aria-pressed={o.value === value} onClick={() => onChange(o.value)}>
+    <div className="seg rubber" role="radiogroup" aria-label={label}>
+      <motion.i className="seg-thumb" aria-hidden="true" style={{ left, width, transition: 'none' }} />
+      {options.map((o, i) => (
+        <button
+          key={o.value}
+          ref={(el) => { refs.current[i] = el; }}
+          type="button"
+          role="radio"
+          className={o.value === value ? 'on' : undefined}
+          aria-checked={o.value === value}
+          tabIndex={o.value === value ? 0 : -1}
+          onClick={() => onChange(o.value)}
+          onKeyDown={onKey}
+        >
           {o.label}
         </button>
       ))}

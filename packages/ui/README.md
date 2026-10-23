@@ -26,11 +26,14 @@ The best worked example is [`demo/main.tsx`](demo/main.tsx) (`npm run demo` from
 | `shell.tsx` | `AppShell` `Sidebar` `SidebarNav` (sliding highlight) `Brand` `GameSwitcher` `AccountMenu` `Workspace` `TopBar` `SearchButton` `IconButton` `PageHead` `Page` `TabBar` `MoreSheet` `CommandPalette` (`scoreCommand`, `filterCommands`) |
 | `primitives.tsx` | `Tag` `Count` `Button` `Segmented` `Delta` / `formatDelta` `Sparkline` `RollingNumber` `Kpi` `Panel` `EmptyState` `STATUS_MEANING` |
 | `feedback.tsx` | `Skeleton` `PageSkeleton` `LoadBar` `StatusLine` `ErrorPanel` `Banner` `Freshness` `ToastProvider` / `useToast` (`stackToast`, `TOAST_MS`, `MAX_TOASTS`) `NotificationList` `BellButton` |
-| `overlays.tsx` | `Drawer` `DialogShell` `ConfirmDelete` (typed name) `ShortcutsDialog` `Definition` `Popover` `MultiSelect` `SingleSelect` `Calendar` (`pickDay`, `monthGrid`) |
+| `overlays.tsx` | `Drawer` `DialogShell` `ConfirmDelete` (typed name) `ShortcutsDialog` `Definition` `DefinitionGroup` (warm tooltips) `Popover` `MultiSelect` `SingleSelect` `Calendar` (`pickDay`, `monthGrid`) |
 | `rules.tsx` | condition model (`matchesEvent`, `conditionError`, `updateNode`) `ConditionSentence` `RuleSentence` `RuleBar` `ConditionEditor` `RulePreview` `HighlightsBar` `Timeline` |
 | `data.tsx` | `BarChart` `SurvivalCurve` `HeatStrip` `FunnelHeadline` `FunnelResult` `OptionChip` `CompareTable` (`compareSummary`, `dropToNext`, `steepest`, `biggestDrop`) `useWidth` |
 | `cards.tsx` | `GameCard` `GamesGrid` `InsightCard` `Insights` `Kpis` `SectionLabel` `SectionTile` `Tiles` `NeedsALook` `SetupChecklist` `StatusStrip` `Pipeline` `FilterBar` |
-| `assistant.tsx` | `NutBotPanel` `ToolTrace` `Block` (table, checklist, chart, custom, proposal) |
+| `assistant.tsx` | `NutBotPanel` `PromptBar` (`parseToken`) `ThoughtLine` `ToolCallChip` `ToolTrace` `Block` (table, checklist, chart, custom, proposal) |
+| `marks.tsx` | `StatusMark` `Bits` `SpringCheck` `Lattice` (`LATTICE_PATTERNS`, `fmtElapsed`) `Heartbeat` `RollingText` `BranchList` `useRect` |
+| `flows.tsx` | `CodeSlots` (`insertDigits`, `digitsOf`) `Stepper` `Step` |
+| `pixel-field.tsx` | `PixelField` (`roleColour`) |
 | `pixel-icon.tsx` | `PixelIcon` `pixelIconSVG` `PIXEL_ICONS` `ICON_COLORS` |
 | `icons.tsx` | `Icon` (line icons by name) |
 | `context.tsx` | `AppContainerProvider` `useAppContainer` `useAppElement` (so portals render inside the container the layout queries) |

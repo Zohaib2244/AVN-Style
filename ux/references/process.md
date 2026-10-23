@@ -39,3 +39,4 @@ Take a screenshot at each width and go through this list. Fix what fails.
 - [ ] Copy is plain and specific; errors say what happened and what to do.
 - [ ] Checked in dark and light, and in at least two palettes.
 - [ ] Reduced motion: nothing moves, final states show straight away.
+- [ ] At most one ambient thing per view (a lattice, a pixel field, a heartbeat, a scene), none of it behind data.

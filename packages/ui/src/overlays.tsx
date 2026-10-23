@@ -158,24 +158,32 @@ function ShortcutRow({ s }: { s: Shortcut }): ReactElement {
 
 /* ───────── Definition tooltip ───────── */
 
-/** A label with a dotted underline that explains how a number is counted. */
+/**
+ * Warm tooltips: the first one waits `delay` (a fuse line under the term shows it), and while one is
+ * open or was closed within `warm` ms, neighbours open at once. Wrap a page (or a table) in one group.
+ */
+export function DefinitionGroup({ delay = 400, warm = 300, children }: { delay?: number; warm?: number; children: ReactNode }): ReactElement {
+  return <RadixTooltip.Provider delayDuration={delay} skipDelayDuration={warm}>{children}</RadixTooltip.Provider>;
+}
+
+/** A label with a dotted underline that explains how a number is counted. Works alone or inside a DefinitionGroup. */
 export function Definition({ term, children, source }: { term: string; children: ReactNode; source?: string }): ReactElement {
-  return (
-    <RadixTooltip.Provider delayDuration={150}>
-      <RadixTooltip.Root>
-        <RadixTooltip.Trigger asChild>
-          <span className="def" tabIndex={0}>{term}</span>
-        </RadixTooltip.Trigger>
-        <RadixTooltip.Portal>
-          <RadixTooltip.Content className="tip" sideOffset={8} style={{ position: 'static' }}>
-            <b>{term}</b>
-            {children}
-            {source ? <small>{source}</small> : null}
-          </RadixTooltip.Content>
-        </RadixTooltip.Portal>
-      </RadixTooltip.Root>
-    </RadixTooltip.Provider>
+  const body = (
+    <RadixTooltip.Root>
+      <RadixTooltip.Trigger asChild>
+        <span className="def" tabIndex={0}>{term}</span>
+      </RadixTooltip.Trigger>
+      <RadixTooltip.Portal>
+        <RadixTooltip.Content className="tip" sideOffset={8} style={{ position: 'static' }}>
+          <b>{term}</b>
+          {children}
+          {source ? <small>{source}</small> : null}
+        </RadixTooltip.Content>
+      </RadixTooltip.Portal>
+    </RadixTooltip.Root>
   );
+  // Radix needs a Provider; when no group is around, each definition is its own warm group.
+  return <RadixTooltip.Provider delayDuration={400} skipDelayDuration={300}>{body}</RadixTooltip.Provider>;
 }
 
 /* ───────── Popover (pickers) ───────── */
@@ -276,12 +284,53 @@ export function MultiSelect({ groups, value, onChange, pinned, onClear, onDone }
   );
 }
 
-/** Single-select list: same rows without checkboxes; a tick marks the current option; picking applies. */
+/**
+ * Single-select list: same rows without checkboxes; a tick marks the current option; picking applies.
+ * One pill glides between rows under the pointer and the arrow keys (it remembers its row when the
+ * pointer leaves); typing a letter jumps to the next option starting with it.
+ */
 export function SingleSelect<T extends string>({ options, value, onChange }: { options: PickerOption<T>[]; value: T; onChange: (v: T) => void }): ReactElement {
+  const selected = Math.max(0, options.findIndex((o) => o.value === value));
+  const [active, setActive] = useState<number>(selected);
+  const refs = useRef<Array<HTMLButtonElement | null>>([]);
+  const [pill, setPill] = useState({ y: 0, h: 36 });
+  useEffect(() => {
+    const el = refs.current[active];
+    if (el) setPill({ y: el.offsetTop, h: el.offsetHeight });
+  }, [active, options.length]);
+  const onKey = (e: React.KeyboardEvent) => {
+    const n = options.length;
+    let next: number | null = null;
+    if (e.key === 'ArrowDown') next = (active + 1) % n;
+    else if (e.key === 'ArrowUp') next = (active + n - 1) % n;
+    else if (e.key === 'Home') next = 0;
+    else if (e.key === 'End') next = n - 1;
+    else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onChange(options[active]!.value); return; }
+    else if (e.key.length === 1 && !e.metaKey && !e.ctrlKey && !e.altKey) {
+      const c = e.key.toLowerCase();
+      for (let k = 1; k <= n; k++) { const i = (active + k) % n; if (options[i]!.label.toLowerCase().startsWith(c)) { next = i; break; } }
+    }
+    if (next === null) return;
+    e.preventDefault();
+    setActive(next);
+    refs.current[next]?.focus();
+  };
   return (
-    <div className="pop-scroll">
-      {options.map((o) => (
-        <button key={o.value} type="button" className="opt" role="menuitemradio" aria-checked={o.value === value} onClick={() => onChange(o.value)}>
+    <div className="pop-scroll glide" role="menu" onKeyDown={onKey}>
+      <i className={cx('pop-pill', 'on')} aria-hidden="true" style={{ ['--y' as string]: `${pill.y}px`, ['--h' as string]: `${pill.h}px` }} />
+      {options.map((o, i) => (
+        <button
+          key={o.value}
+          ref={(el) => { refs.current[i] = el; }}
+          type="button"
+          className="opt"
+          role="menuitemradio"
+          aria-checked={o.value === value}
+          tabIndex={i === active ? 0 : -1}
+          onPointerEnter={() => setActive(i)}
+          onFocus={() => setActive(i)}
+          onClick={() => onChange(o.value)}
+        >
           <span className="tick"><Icon name="check" /></span>
           <span className="ot">{o.label}</span>
           {o.hint ? <span className="oc">{o.hint}</span> : null}

@@ -29,11 +29,12 @@ every palette, dark and light, wide / tablet / phone. Everything below describes
 |---|---|---|
 | **UX rules** | `ux/SKILL.md`, `ux/references/` | Rules for agents and humans: how to take a request, app shell, page patterns, components, pickers, dense data, funnels, rules and highlights, loading / errors / toasts, command palette and other tools, the NutBot assistant, motion, and the front-end stack. |
 | **Components (CSS)** | `ux/assets/components.css` | Every component as plain CSS, using only contract roles. Works without React. |
-| **Components (React)** | `packages/ui` → `@avn/ui` | The same components as React + TypeScript with Motion animation: shell, nav, drawer, dialogs, pickers, toasts, command palette, rule editor, highlights, funnel, charts, compare table, setup checklist, NutBot panel, pixel icons. 133 tests. |
+| **Components (React)** | `packages/ui` → `@avn/ui` | The same components as React + TypeScript with Motion animation: shell, nav, drawer, dialogs, pickers, toasts, command palette, rule editor, highlights, funnel, charts, compare table, setup checklist, stepper, code slots, status marks, spring checks, lattice loader, heartbeat, branch list, pixel field, NutBot panel with thought line, call chips and prompt bar, pixel icons. 162 tests. |
 | **Contract** | `contract.md` | The list of roles (`--bg`, `--panel`, `--accent`, `--ok`, `--done` …) every style fills. |
-| **Style: AVN Family** | `styles/avn-family/` | The default look. Calm warm-dark surfaces, Pixelify titles, pixel icons, personal flavour. Palettes: Nutmeg (default), Slate, Moss, Hibiscus, White build. |
+| **Style: AVN Family** | `styles/avn-family/` | The default look. Calm warm-dark surfaces, Pixelify titles, pixel icons, personal flavour. Palettes: Nutmeg (default), Slate, Moss, Hibiscus, White build, Chiral, Dora. |
 | **Style: Nutstyle** | `styles/nutstyle/` | AVN Hub's original look (chunky sticker cards, DotGothic, offset shadows), converted to the contract. 8 palettes. Old token names kept as aliases so AVN Hub keeps working. |
 | **Style template** | `styles/_template/` | Start here for a new style. |
+| **Suggestions** | `docs/SUGGESTIONS.md` | A review of the UX with the improvements worth doing next. |
 | **Style checker** | `scripts/check-style.mjs` | Fails if a style leaves out a contract role. |
 | **Board** | `board/index.html` | The live reference. |
 | **Example** | `examples/minimal.html` | A plain-HTML page (no build) with switchers for style, palette and theme. Also previews a new style. |
@@ -50,8 +51,8 @@ inspector drawer · multi-select, single-select and date-range pickers · dense 
 level curve + heat strip · visual funnel · rule bar, rule sentences, rule editor, timeline highlights ·
 loading (skeleton + status line), errors (where each kind goes), toasts (stacking, auto-fade, dismiss), notifications bell,
 undo vs typed confirmation · command palette, copy-link, definitions, keyboard shortcuts, freshness stamps ·
-Done → Verified status vocabulary · NutBot assistant (context chips, visible tool calls, answer blocks, confirm before changing) ·
-motion rules.
+Done → Verified status vocabulary · NutBot assistant (context chips, thought line, call chips, prompt bar with @ context and / commands, answer blocks, confirm before changing) ·
+**moments and ambient life** (status marks that morph, spring checks, rubber segmented thumb, gliding picker pill, code slots, stepper, heartbeat, lattice loader, branch list, pixel field, warm definitions) · motion rules.
 
 ---
 
@@ -116,8 +117,9 @@ Optional style files: `skin.css` (component looks such as sticker shadows or upp
 
 | Style | Palettes | Notes |
 |---|---|---|
-| `avn-family` | none (**Nutmeg**), `slate`, `moss`, `hibiscus`, `white` | Pixelify Sans titles, Atkinson Hyperlegible body, JetBrains Mono data. Pixel icons with a spark pixel that doubles as a status light. [`FLAVOUR.md`](styles/avn-family/FLAVOUR.md) lists the personal motifs and their rules. |
+| `avn-family` | none (**Nutmeg**), `slate`, `moss`, `hibiscus`, `white`, `chiral`, `dora` | Pixelify Sans titles, Atkinson Hyperlegible body, JetBrains Mono data. Pixel icons with a spark pixel that doubles as a status light. [`FLAVOUR.md`](styles/avn-family/FLAVOUR.md) lists the personal motifs and their rules. |
 | `nutstyle` | none (ember), `slate`, `moss`, `plum`, `reef`, `raspberry`, `circuit`, `graphite` | DotGothic16 + JetBrains Mono, hard offset shadows. `hub-base.css` holds AVN Hub's own classes. |
+| `pocket` | none (**Cream**), `mint`, `lagoon`, `grape` | A handheld console in cream: cream shell in light, backlit olive LCD in dark. Space Grotesk titles, Inter body, JetBrains Mono data, keys that press (`skin.css`), one yellow face-button accent. [`FLAVOUR.md`](styles/pocket/FLAVOUR.md) lists the motifs (blocks, the mini PC as a cartridge, Dora on the LCD). |
 
 Switch with attributes on `<html>`: `data-theme="light|dark"` (default follows the system) and `data-palette="…"`.
 
@@ -156,12 +158,12 @@ Run from the repo root (Node 20+):
 
 ## Quality
 
-- **133 tests** (Vitest + Testing Library): pure logic (change cell, toast stacking and dedupe, date ranges, command-palette scoring,
-  condition matching, funnel and compare maths, pixel-icon grammar), and behaviour (drawer, pickers, typed confirmation, rule
-  editor, highlights, setup checklist, NutBot proposals).
+- **162 tests** (Vitest + Testing Library): pure logic (change cell, toast stacking and dedupe, date ranges, command-palette scoring,
+  condition matching, funnel and compare maths, pixel-icon grammar, code-slot editing, prompt tokens), and behaviour (drawer, pickers, typed confirmation, rule
+  editor, highlights, setup checklist, stepper, code slots, status marks, spring checks, thought line and call chips, prompt bar, NutBot proposals).
 - **A CSS guard**: every class a component uses must exist in `components.css`.
 - **A style checker** with its own tests, including a style that deliberately leaves a role out.
-- Checked by hand in a browser: both styles, every palette in dark and light (26 combinations), wide / tablet / phone.
+- Checked by hand in a browser: three styles, every palette in dark and light, wide / tablet / phone.
 
 ## Stack
 

@@ -5,6 +5,7 @@ import {
   FunnelHeadline, FunnelResult, GameSwitcher, HeatStrip, HighlightsBar, Icon, IconButton, Insights, InsightCard, Kpi, Kpis, LoadBar, MultiSelect, NeedsALook,
   NotificationList, NutBotPanel, Page, PageHead, Panel, Pipeline, Popover, RuleBar, SearchButton, SectionLabel, SetupChecklist, ShortcutsDialog, Sidebar, SidebarNav,
   SingleSelect, Skeleton, SurvivalCurve, Tag, TabBar, Timeline, ToastProvider, TopBar, Workspace, useToast, emptyCondition, type CommandItem, type Highlight,
+  CodeSlots, Heartbeat, Lattice, PixelField, SpringCheck, StatusMark, Step, Stepper, DefinitionGroup, Definition, BranchList,
   type NavGroup, type NbMessage, type PlayerRule, type TimelineEvent,
 } from '@avn/ui';
 
@@ -29,10 +30,11 @@ const RULES: PlayerRule[] = [
   { verb: 'didnt', event: 'level_start', cond: { match: 'all', conditions: [{ field: 'param', param: 'level', op: 'eq', value: '13' }] }, times: 1 },
 ];
 
-function setStyle(name: 'avn-family' | 'nutstyle') {
+type StyleName = 'avn-family' | 'nutstyle' | 'pocket';
+function setStyle(name: StyleName) {
   (document.getElementById('style-fonts') as HTMLLinkElement).href = `/${name}/fonts.css`;
   (document.getElementById('style-tokens') as HTMLLinkElement).href = `/${name}/tokens.css`;
-  (document.getElementById('style-skin') as HTMLLinkElement).href = name === 'nutstyle' ? '/nutstyle/skin.css' : '/avn-family/flavour.css';
+  (document.getElementById('style-skin') as HTMLLinkElement).href = name === 'avn-family' ? '/avn-family/flavour.css' : `/${name}/skin.css`;
 }
 
 function Demo() {
@@ -51,6 +53,10 @@ function Demo() {
   const [tree, setTree] = useState(RULES[0]!.cond);
   const [env, setEnv] = useState<Record<string, string[]>>({ 'App version': ['0.1.3'] });
   const [hideDev, setHideDev] = useState(true);
+  const [pairStep, setPairStep] = useState(1);
+  const [pairStatus, setPairStatus] = useState<'idle' | 'error' | 'success'>('idle');
+  const [beatTick, setBeatTick] = useState(0);
+  const [related, setRelated] = useState('l12');
   const filterBtn = useRef<HTMLElement | null>(null);
   const bellBtn = useRef<HTMLButtonElement>(null);
   const items = useMemo<CommandItem[]>(() => [
@@ -121,6 +127,23 @@ function Demo() {
             <HighlightsBar highlights={HL} events={TL} mode="highlight" onMode={() => {}} onToggle={() => {}} onEdit={() => {}} onAdd={() => {}} current={1} onJump={() => {}} />
             <Timeline events={TL} highlights={HL} mode="highlight" current={1} />
           </div></Panel>
+          <Panel title="Pair a device" subtitle="The setup flow: stepper, code slots, status marks"><div className="pb">
+            <Stepper label="Pair a device" linear nextDisabled={pairStep === 2 && pairStatus !== 'success'} onStepChange={setPairStep} onComplete={() => toast({ kind: 'ok', title: 'Pixel 7 paired' })}>
+              <Step title="Install"><p className="muted">Drop the PlayLens package into the Unity project and press Play once.</p></Step>
+              <Step title="Pair" description="Enter the code"><div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <CodeSlots length={4} status={pairStatus} message={pairStatus === 'error' ? 'That code has expired. Ask PlayLens for a new one.' : pairStatus === 'success' ? 'Paired with Pixel 7 · PlayLens 0.4.1' : 'Type the 4-digit code shown in PlayLens, or paste it.'} onComplete={(c) => setPairStatus(c === '4217' ? 'success' : 'error')} onChange={(c) => { if (!c) setPairStatus('idle'); }} />
+                <span className="hint">The right code is 4217.</span></div></Step>
+              <Step title="Verify"><div className="row-wrap"><StatusMark state="wait" label="Waiting for the first event" /><Lattice label="Listening" /></div></Step>
+            </Stepper>
+            <div className="row-wrap" style={{ marginTop: 12, gap: 18 }}>
+              <SpringCheck label="Invite the team" />
+              <Heartbeat tick={beatTick} count={1204 + beatTick} label="Receiving events" />
+              <Button size="sm" onClick={() => setBeatTick((t) => t + 1)}>A packet arrives</Button>
+              <DefinitionGroup><Definition term="Drop to next">Players who started this level but never started the next.</Definition> · <Definition term="Tries">Starts per player.</Definition></DefinitionGroup>
+            </div>
+            <div className="pxhost" style={{ marginTop: 12, borderRadius: 12, border: '1px dashed var(--line-strong)' }}><PixelField burst={beatTick} /><EmptyState title="Register a game" action={<Button size="sm">Get an API key</Button>}>Move the pointer over the card; a packet arriving bursts it.</EmptyState></div>
+            <BranchList label="Related" current={related} onSelect={setRelated} items={[{ id: 'l11', label: 'Level 11', icon: 'pad' }, { id: 'l12', label: 'Level 12', icon: 'pad' }, { id: 'l13', label: 'Level 13', icon: 'pad' }]} />
+          </div></Panel>
           <Panel title="Pipeline"><div className="pb"><Pipeline steps={[{ label: 'SDK found', detail: '0.4 s', state: 'ok' }, { label: 'Ingest', detail: '1.1 s', state: 'ok' }, { label: 'Stored', detail: 'to confirm', state: 'done' }, { label: 'Dictionary', detail: 'waiting', state: 'wait' }]} onVerify={() => toast({ kind: 'ok', title: 'Storage verified' })} /></div></Panel>
           <Panel title="Loading, empty, errors"><div className="pb" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <LoadBar text="Reading your events. The first load takes a few seconds." />
@@ -150,18 +173,19 @@ function Demo() {
       <ShortcutsDialog open={keys} onClose={() => setKeys(false)} />
       <CommandPalette open={palette} onClose={() => setPalette(false)} items={items} onAsk={ask} />
       <NutBotPanel open={nb} onClose={() => setNb(false)} messages={msgs} busy={msgs.some((m) => m.role === 'bot' && !m.done)} onSend={ask} onNew={() => setMsgs([])}
-        context={[{ id: 'game', label: 'Nut Sort Puzzle', fixed: true }, { id: 'page', label: page }, { id: 'range', label: 'Last 30 days' }]} onToggleContext={() => {}} suggestions={['Where do players drop off most?']} face={<Icon name="bot" />} />
+        context={[{ id: 'game', label: 'Nut Sort Puzzle', fixed: true }, { id: 'page', label: page }, { id: 'range', label: 'Last 30 days' }]} onToggleContext={() => {}} suggestions={['Where do players drop off most?']} face={<Icon name="bot" />} commands={[{ name: '/funnel', description: 'Build a funnel from these steps' }, { name: '/players', description: 'Find players who match' }]} />
     </AppShell>
   );
 }
 
 function Root() {
-  const [style, setS] = useState<'avn-family' | 'nutstyle'>('avn-family');
+  const [style, setS] = useState<StyleName>('avn-family');
   return (
     <ToastProvider>
       <div style={{ display: 'flex', gap: 8, padding: 12 }} id="demo-controls">
         <Button size="sm" onClick={() => { setS('avn-family'); setStyle('avn-family'); }} aria-pressed={style === 'avn-family'}>AVN Family</Button>
         <Button size="sm" onClick={() => { setS('nutstyle'); setStyle('nutstyle'); }} aria-pressed={style === 'nutstyle'}>Nutstyle</Button>
+        <Button size="sm" onClick={() => { setS('pocket'); setStyle('pocket'); }} aria-pressed={style === 'pocket'}>Pocket</Button>
         <Button size="sm" onClick={() => document.documentElement.setAttribute('data-theme', document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light')}>Toggle theme</Button>
       </div>
       <div style={{ padding: '0 12px 24px' }}><Demo /></div>

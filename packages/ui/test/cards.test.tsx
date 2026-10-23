@@ -29,9 +29,18 @@ describe('primitives', () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
     render(<Segmented label="Time zone" value="local" onChange={onChange} options={[{ value: 'local', label: 'Local' }, { value: 'utc', label: 'UTC' }]} />);
-    expect(screen.getByRole('button', { name: 'Local' })).toHaveAttribute('aria-pressed', 'true');
-    await user.click(screen.getByRole('button', { name: 'UTC' }));
+    expect(screen.getByRole('radio', { name: 'Local' })).toHaveAttribute('aria-checked', 'true');
+    expect(document.querySelector('.seg.rubber .seg-thumb')).not.toBeNull();
+    await user.click(screen.getByRole('radio', { name: 'UTC' }));
     expect(onChange).toHaveBeenCalledWith('utc');
+  });
+  it('Segmented moves with the arrow keys', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(<Segmented label="Density" value="comfort" onChange={onChange} options={[{ value: 'comfort', label: 'Roomy' }, { value: 'compact', label: 'Compact' }]} />);
+    screen.getByRole('radio', { name: 'Roomy' }).focus();
+    await user.keyboard('{ArrowRight}');
+    expect(onChange).toHaveBeenCalledWith('compact');
   });
   it('Kpi: label, number, context, unit, optional sparkline', () => {
     const { container } = render(<Kpi label="Stickiness" value={5.9} decimals={1} unit="%" context="avg DAU ÷ MAU" spark={[1, 2, 3]} />);
@@ -140,9 +149,11 @@ describe('NutBot', () => {
     expect(screen.getByText('get_player_story')).toBeInTheDocument();
     expect(screen.getByText('player: u_7f3a2c')).toBeInTheDocument();
   });
-  it('a working trace says Working…', () => {
+  it('a working trace is a thought line that says Thinking… and shows the running call chip', () => {
     render(<ToolTrace done={false} tools={[{ name: 'run_funnel', args: '', done: false }]} />);
-    expect(screen.getByRole('button', { name: /Working/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Thinking/ })).toHaveAttribute('aria-expanded', 'true');
+    expect(document.querySelector('.callchip[data-status="running"]')).not.toBeNull();
+    expect(document.querySelector('.thought[data-working]')).not.toBeNull();
   });
   it('a proposal changes nothing until confirmed, then says Undo is in the toast', async () => {
     const user = userEvent.setup();
@@ -220,8 +231,16 @@ describe('NutBot', () => {
     expect(onPin).toHaveBeenCalledWith({ title: 'Biggest drop', value: 'Level 12', sub: '35% stop there' });
     expect(screen.getByText('Pinned')).toBeInTheDocument();
   });
-  it('while busy, Send is disabled', () => {
-    render(panel({ busy: true }));
+  it('while busy, the send button becomes Stop and stops', async () => {
+    const user = userEvent.setup();
+    const onStop = vi.fn();
+    render(panel({ busy: true, onStop }));
+    expect(screen.queryByRole('button', { name: 'Send' })).toBeNull();
+    await user.click(screen.getByRole('button', { name: 'Stop' }));
+    expect(onStop).toHaveBeenCalled();
+  });
+  it('empty draft: Send is disabled', () => {
+    render(panel());
     expect(screen.getByRole('button', { name: 'Send' })).toBeDisabled();
   });
   it('closed renders nothing', () => {

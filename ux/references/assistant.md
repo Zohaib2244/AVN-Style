@@ -6,7 +6,7 @@ it answers with **that app's components**. The look comes from the style.
 ## Where it lives
 - A panel on the right (`.nb`, ≈420 px); the page stays usable beside it. An open drawer slides left to sit next to it. Phone: bottom sheet.
 - Opens from the NutBot button, **Ctrl/Cmd + J**, or "Ask NutBot" in the command palette.
-- Composer: Enter sends, Shift + Enter new line. New-conversation button. Conversations are kept per game.
+- Composer is a **prompt bar** (`.pbar`): a textarea that grows to five lines; a **+** button and typing **@** open the context list (game, page, range, player, session: the same chips as "Looking at"); typing **/** opens the app's commands (`/funnel`, `/players`, `/export` …); ↑ ↓ move a glow between rows, Enter or Tab picks, Esc closes. Enter sends, Shift + Enter new line. The send arrow **morphs into a stop square** while NutBot works; pressing it stops. New-conversation button. Conversations are kept per game.
 
 ## Context
 - A **"Looking at"** row of chips: game, page, range, version/filters, and the open player or session. Each (except the game) can be left out with × and put back with +.
@@ -15,7 +15,8 @@ it answers with **that app's components**. The look comes from the style.
 - If a question needs something that isn't open ("this player"), NutBot **asks back** with a pick list, then opens it and answers.
 
 ## Show the work
-- Each tool call appears as it runs: name, inputs, spinner → check. Afterwards it folds to "Used 2 tools" and can be reopened.
+- While working, a **thought line** (`.thought`) says "Thinking…" with a shimmer and a running timer; when the answer lands it settles to "Thought for 2.3 s" and the steps fold under it (reopen by clicking it).
+- Each tool call is a **call chip** (`.callchip`): tool icon, name, input, timer. It fills left to right while running (the expected time sets the pace, holding at 90 % until it ends), washes Verified when done, and on failure shakes, tints Failed and becomes a Retry button. The chips hang off the thought line as a branch list.
 - Every number links back to where it came from ("Open timeline", "Open level 12").
 - Each answer ends with the scope it used ("Same filters as the page · last 30 days · version 0.1.3").
 
