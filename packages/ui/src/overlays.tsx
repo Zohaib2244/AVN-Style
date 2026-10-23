@@ -342,7 +342,7 @@ export function SingleSelect<T extends string>({ options, value, onChange }: { o
 
 /* ───────── Date range ───────── */
 
-export type DateRange = { start: Date; end: Date };
+export type CalendarRange = { start: Date; end: Date };
 const startOfDay = (d: Date): Date => new Date(d.getFullYear(), d.getMonth(), d.getDate());
 export const sameDay = (a?: Date | null, b?: Date | null): boolean => !!a && !!b && startOfDay(a).getTime() === startOfDay(b).getTime();
 
@@ -360,7 +360,7 @@ export function monthGrid(year: number, month: number): Date[] {
   return Array.from({ length: 42 }, (_, i) => new Date(year, month, 1 - offset + i));
 }
 
-export function Calendar({ value, onChange, today = new Date() }: { value: DateRange | null; onChange: (r: DateRange) => void; today?: Date }): ReactElement {
+export function Calendar({ value, onChange, today = new Date() }: { value: CalendarRange | null; onChange: (r: CalendarRange) => void; today?: Date }): ReactElement {
   const base = value?.end ?? today;
   const [view, setView] = useState({ y: base.getFullYear(), m: base.getMonth() });
   const [draft, setDraft] = useState<{ start: Date | null; end: Date | null }>({ start: value?.start ?? null, end: value?.end ?? null });

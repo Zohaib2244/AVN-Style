@@ -11,6 +11,10 @@
 - Refreshing data already on screen: keep it visible, say "Refreshing…" in the header. Never blank a page that has data.
 - Spinners for buttons; the **lattice** (`.lattice`, a 3 × 3 pixel grid lighting cells in a pattern) for status lines, panel headers and NutBot thinking: it says how long so far and turns into a check or a cross when the wait ends ("Done in 2.3 s", "Failed after 8.1 s"); skeletons for content; pixel-block bar for known-length work (exports).
 
+### Query regions
+- A region that waits on a read goes skeleton → error panel with Try again → content, and while a newer answer loads for data already on screen it keeps the content and says "Updating… Showing previous results.", so nothing a person is reading ever blanks (`QueryRegion`).
+- A refetch that fails keeps the previous data under a banner with Try again; a first load that fails shows the error panel in the region's place, so the rest of the page still works.
+
 ## Errors: where they go
 | What failed | Where | How long |
 |---|---|---|

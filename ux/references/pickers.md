@@ -21,3 +21,8 @@ All three share one popover (`.pop`). Desktop/tablet: opens under its control, a
 - Opens from the date field or "Custom range".
 - Two taps: start, then end; applies on the second.
 - Range filled softly, ends solid, today ringed; Monday first; other months dimmed; arrows move by month.
+- **Presets** (Today, Yesterday, Last 7/30/90 days, This month, Last month) sit in a single-select list with the date span as the hint, so the person sees the days before committing; "Custom range…" is the last row and opens the calendar (`DateRange`).
+- **Compact row** for filter bars: preset menu · ‹ · the days (opens the calendar) · ›, one line so the range never pushes the other filters down.
+- **Stepping**: ‹ › move the range by its own length (a 7-day range steps a week, a month steps a month) and turn it into a custom range, because "the same window, one period earlier" is the comparison people ask for.
+- **Full variant** (settings, forms): every preset is a pressed button in a wrapping row above the days, so the choice is visible without opening anything.
+- Applied filters are chips under the bar (`FilterBar`); the chip only removes, the app offers Undo in the toast.

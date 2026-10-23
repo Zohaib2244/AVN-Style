@@ -14,7 +14,7 @@ Each item says where it lives and how big it is. Nothing here is built unless ma
 2. **The sidebar count rule is too strict for live things.** Counts appear only for "needs a look", so a page receiving events shows a dot but no number. Allow one live count (`.cnt.info`) on the Data health item when the heartbeat is beating. Small; `shell.md`.
 3. **Drawer-in-drawer needs breadcrumbs.** The back arrow works for one level, but a level → player → session chain loses the trail. Show the stack as crumbs in the drawer header (max 3). Medium; `overlays.tsx`, `components.md`.
 4. **"Copy link" should confirm with the link itself.** The toast says "Link copied"; show the short form of the URL and the filters it carries so people trust it. Small; `tools.md`.
-5. **Compare view: name the baseline.** The change cell says "less drop" but not relative to what; pin "A is the baseline" into the group header. Small; `data.md`.
+5. ~~**Compare view: name the baseline.**~~ Built in 0.3.0: `CompareTable` takes `baseline` ('a' | 'b', default A); the baseline group's header says "· baseline" and the change column says "B vs A" / "A vs B"; `compareSummary` reads worse / better against it.
 6. **Empty states should offer the next action by default.** Several empty panels end with a sentence and no button (`NeedsALook` all-clear, highlights "Nothing matches"). The rule says one action; make `EmptyState` require it. Small; `primitives.tsx`.
 7. **Density should also apply to the sidebar and drawers.** Compact only changes content padding and rows. Medium; `components.css` density block.
 8. **Pocket needs a boot screen.** The power-LED boot is listed under "Ideas not built yet" in `styles/pocket/FLAVOUR.md`. Flavour-only, small.

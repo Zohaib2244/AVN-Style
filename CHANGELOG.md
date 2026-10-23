@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.0
+
+**Shared patterns from AVN Analytics.** Six things the Analytics website had to hand-roll, now in the system so every tool gets them. No new dependencies.
+
+- **UX rules:** query regions in `feedback.md`; forms, remembered disclosures and the collapsible panel in `components.md`; the per-day table, funnel timing lines, "Stopped here", the marked biggest drop, N-segment breakdowns and the named compare baseline in `data.md`; date-range presets, the compact row and stepping in `pickers.md`.
+- **`components.css`:** `.qr` `.qr-upd` `.skb*` `.form-err` `.fld .hint` `.fold` `.collapsed` `.collapse-*` `.daily*` `.range-total` `progress.rel` `.trend` `.range*` `.ft` `.fstop*` `.cmp-base` `.base`.
+- **`@avn/ui` 0.3.0:** `QueryRegion` (framework-agnostic `QueryLike`; TanStack's result satisfies it), `SkeletonBlock`, `useSubmit`, `FormError`, `Field`, `RememberedDetails`, `CollapsiblePanel`, `DailyTable`, `TrendLine`, `DateRange` (+ `PRESETS`, `resolveRange`, `rangeText`, `shiftRange`, ISO-day helpers). `FunnelResult` gains per-step `times`, `stopped` (with `onOpenPlayer` / `renderLink`), `segmentsOf` + `shares`, `data-worst`; `CompareTable` gains `baseline` and `footnote`; `compareSummary` and the new `dropChange` read against the baseline. Additive.
+- **Fix:** 0.2.0 was published without `marks.tsx`, `flows.tsx` and `pixel-field.tsx` (a `Packages` line in a global gitignore hid new files under `packages/` on a case-insensitive disk). They are reconstructed from the rules, the CSS and the board, with `test/marks.test.tsx`.
+- **Breaking (small):** the Calendar's value type `DateRange` is renamed `CalendarRange`; `DateRange` is now the component.
+- **Docs:** SUGGESTIONS.md item 5 (name the baseline) built.
+
 ## 0.2.0
 
 **Delight: moments and ambient life.** Fourteen behaviours adapted from React Bits onto the contract roles, each with a job (see `ux/references/motion.md`). No new dependencies.

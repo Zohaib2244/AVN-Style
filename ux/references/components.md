@@ -35,6 +35,12 @@ Counts: `.cnt`, `.cnt.warn`, `.cnt.bad`, `.cnt.info`.
 ## Panels
 `.panel` → `.ph` (title, one line under it, actions + freshness stamp on the right) → `.pb` body or a table. Don't nest panels.
 
+## Remembered disclosures
+`details.fold` (`RememberedDetails`): a fold remembers whether it was open, per name, in one browser entry per owner (`storageKey`: an event, a player, a game), so a person who closed "Setup" on one player's page finds it closed on the next, and another owner's folds are never carried over. A fold never toggled follows its default.
+
+## Collapsible panel
+`.panel.collapsed` (`CollapsiblePanel`): a panel folds down to its header with one chevron button (`aria-expanded`), and while folded a one-line `.collapse-note` beside the title says what it holds ("1,204 events · 7 days"), because a folded panel must still answer the question it was there for. The body stays mounted so its state survives; the fold is remembered like a disclosure.
+
 ## "Needs a look" list
 `.look` rows: kind tag, one-line problem with one detail line, one action. When empty, show the style's "all clear" scene.
 
@@ -80,3 +86,9 @@ The mark **morphs** between states instead of swapping icons. With a label (`.sm
 
 ## Pixel field
 `.pxfield`: a canvas of faint pixels behind a card. Ambient (twinkle at ≤ 8 % opacity), brighter under the pointer, a one-off burst on a celebration. Colours come from the roles (`--text`, `--accent`, `--ok`) read at runtime, so any style works. Only on empty states, the dashed "Register a game" card, and the Verified moment. Never behind data.
+
+## Forms
+`useSubmit`, `FormError`, `Field`:
+- One submit in flight at a time: the button shows it is working and repeat submits are ignored, so a slow save never runs twice.
+- A form has one alert line (`role="alert"`, `.form-err`) for what stopped the whole submit, and each field says under itself how to fix its own input; never both for the same failure.
+- A field's hint or error sits under the control and is read with it (`aria-describedby`), so the fix is heard where the problem is.

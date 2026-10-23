@@ -136,7 +136,46 @@ export function HeatStrip({ starts, onSelect }: { starts: number[]; onSelect?: (
 
 /* ───────── Funnel ───────── */
 
-export type FunnelStep = { label: ReactNode; count: number; /** share of this step belonging to the first segment, when broken down */ firstShare?: number; median?: string };
+/** Time from this step to the next, in seconds (as the AVN Analytics server reports it). */
+export type FunnelTimes = { count: number; median: number; average: number; min: number; max: number; p90: number };
+/** A player who did this step and never did the next. `href` makes it a link (through `renderLink`); otherwise `onOpenPlayer(id)` fires. */
+export type FunnelStopped = { id: string; label: string; href?: string; meta?: string };
+
+export type FunnelStep = {
+  label: ReactNode;
+  count: number;
+  /** share of this step belonging to the first segment, when broken down by two segments */
+  firstShare?: number;
+  /** share of this step per segment (same order as `segmentsOf`), when broken down by N segments */
+  shares?: number[];
+  /** preformatted median to the next step; `times` wins when both are given */
+  median?: string;
+  /** timing to the next step; the line shows the median, hover / screen readers get the rest */
+  times?: FunnelTimes | null;
+  /** example players who stopped after this step ("Stopped here: …") */
+  stopped?: FunnelStopped[];
+};
+
+/** Seconds as "12s", "1m 05s", "2h 03m" or "1d 4h". */
+export function duration(seconds: number): string {
+  const v = Math.round(seconds);
+  if (v < 60) return `${v}s`;
+  if (v < 3600) return `${Math.floor(v / 60)}m ${String(v % 60).padStart(2, '0')}s`;
+  if (v < 86400) return `${Math.floor(v / 3600)}h ${String(Math.floor((v % 3600) / 60)).padStart(2, '0')}m`;
+  return `${Math.floor(v / 86400)}d ${Math.floor((v % 86400) / 3600)}h`;
+}
+
+/** The timing line between two funnel steps ("median 12s to the next step") and the fuller numbers shown on hover. */
+export function timingText(times: FunnelTimes): { line: string; detail: string } {
+  return {
+    line: `median ${duration(times.median)} to the next step`,
+    detail: `${fmt(times.count)} players · average ${duration(times.average)} · fastest ${duration(times.min)} · slowest ${duration(times.max)} · 90% within ${duration(times.p90)}`,
+  };
+}
+
+/** Bar and legend colours for N segments: the neutral bar first, then the highlight roles. */
+export const SEGMENT_COLOURS = ['var(--bar)', 'var(--hl-cyan)', 'var(--hl-orange)', 'var(--hl-green)', 'var(--hl-pink)', 'var(--hl-violet)', 'var(--hl-gold)'];
+const segColour = (i: number) => SEGMENT_COLOURS[i % SEGMENT_COLOURS.length]!;
 
 export function FunnelHeadline({ percent, sentence, started, finished, median }: { percent: number; sentence: ReactNode; started: number; finished: number; median?: string }): ReactElement {
   return (
@@ -150,33 +189,75 @@ export function FunnelHeadline({ percent, sentence, started, finished, median }:
   );
 }
 
-/** Result rows: label and count, a full-width bar, and between rows the players lost with "See who". The biggest drop is marked. */
-export function FunnelResult({ steps, segments, onSeeWho }: { steps: FunnelStep[]; segments?: [string, string]; onSeeWho?: (stepIndex: number) => void }): ReactElement {
+export type FunnelResultProps = {
+  steps: FunnelStep[];
+  /** two-segment breakdown (bars split by `firstShare`) */
+  segments?: [string, string];
+  /** N-segment breakdown (bars split by `shares`); ignored when `segments` is given */
+  segmentsOf?: string[];
+  onSeeWho?: (stepIndex: number) => void;
+  /** a player in a "Stopped here" list was chosen (used when the item has no `href`, or no `renderLink` is given) */
+  onOpenPlayer?: (id: string) => void;
+  /** renders a stopped player's `href` with the app's router; the package never routes */
+  renderLink?: (item: FunnelStopped, children: ReactNode) => ReactNode;
+};
+
+/**
+ * Result rows: label and count, a full-width bar, and between rows the players lost with the time to the next step and
+ * "See who". The biggest drop is marked (`.worst`, `data-worst`). Steps can list example players who stopped there.
+ */
+export function FunnelResult({ steps, segments, segmentsOf, onSeeWho, onOpenPlayer, renderLink }: FunnelResultProps): ReactElement {
   const n0 = steps[0]?.count ?? 1;
   const worst = biggestDrop(steps.map((x) => x.count));
+  const names: string[] | null = segments ? [segments[0], segments[1]] : segmentsOf && segmentsOf.length ? segmentsOf : null;
+  const sharesOf = (s: FunnelStep): number[] | null => {
+    if (!names) return null;
+    if (segments) return s.firstShare == null ? null : [s.firstShare, 1 - s.firstShare];
+    return s.shares ?? null;
+  };
   return (
     <div>
-      {segments ? <div className="legend2"><span><i style={{ background: 'var(--bar)' }} />{segments[0]}</span><span><i style={{ background: 'var(--hl-cyan)' }} />{segments[1]}</span></div> : null}
+      {names ? <div className="legend2">{names.map((name, k) => <span key={k}><i style={{ background: segColour(k) }} />{name}</span>)}</div> : null}
       <div className="fun">
         {steps.map((s, i) => {
-          const pct = (s.count / n0) * 100, a = segments && s.firstShare != null ? Math.round(s.count * s.firstShare) : s.count;
+          const pct = (s.count / n0) * 100;
+          const shares = sharesOf(s);
+          const parts = shares ? shares.map((sh) => Math.round(s.count * sh)) : [s.count];
           const next = steps[i + 1];
           const lost = next ? s.count - next.count : 0;
+          const timing = s.times ? timingText(s.times) : null;
+          const isWorst = i === worst;
           return (
             <div key={i}>
               <div className={cx('frow', i === steps.length - 1 && 'last')}>
                 <span className="n">{i + 1}</span>
                 <span className="fl">{s.label}</span>
                 <div className="fbar">
-                  <i style={{ ['--i' as string]: i, width: `${(a / n0) * 100}%` }} />
-                  {segments ? <i className="b2" style={{ ['--i' as string]: i, width: `${((s.count - a) / n0) * 100}%` }} /> : null}
+                  {parts.map((p, k) => (
+                    <i key={k} className={cx(k === 1 && 'b2')} style={{ ['--i' as string]: i, width: `${(p / n0) * 100}%`, ...(k > 1 ? { background: segColour(k) } : {}) }} />
+                  ))}
                 </div>
-                <span className="fv">{fmt(s.count)} <small>{pct.toFixed(1)}%{segments ? ` · ${a} / ${s.count - a}` : ''}</small></span>
+                <span className="fv">{fmt(s.count)} <small>{pct.toFixed(1)}%{shares ? ` · ${parts.join(' / ')}` : ''}</small></span>
               </div>
               {next ? (
-                <div className={cx('fdrop', i === worst && 'worst')}>
-                  <span>↓ {fmt(lost)} players left ({((lost / s.count) * 100).toFixed(1)}%){s.median ? ` · median ${s.median} to the next step` : ''}{i === worst ? ' · biggest drop' : ''}</span>
+                <div className={cx('fdrop', isWorst && 'worst')} data-worst={isWorst ? '' : undefined}>
+                  <span>
+                    ↓ {fmt(lost)} players left ({((lost / s.count) * 100).toFixed(1)}%)
+                    {timing ? <> · <span className="ft" title={timing.detail}>{timing.line}<span className="visually-hidden"> ({timing.detail})</span></span></> : s.median ? ` · median ${s.median} to the next step` : ''}
+                    {isWorst ? ' · biggest drop' : ''}
+                  </span>
                   {onSeeWho ? <button type="button" className="btn sm ghost" onClick={() => onSeeWho(i)}>See who</button> : null}
+                </div>
+              ) : null}
+              {s.stopped && s.stopped.length ? (
+                <div className={cx('fstop', isWorst && 'worst')}>
+                  <span className="fstop-l">Stopped here:</span>
+                  {s.stopped.map((p) => {
+                    const body = <><span className="mono">{p.label}</span>{p.meta ? <small>{p.meta}</small> : null}</>;
+                    const inner = p.href && renderLink ? renderLink(p, body) : p.href && !onOpenPlayer ? <a href={p.href}>{body}</a> : <button type="button" onClick={() => onOpenPlayer?.(p.id)}>{body}</button>;
+                    return <span key={p.id} className="fstop-p">{inner}</span>;
+                  })}
+                  {lost > s.stopped.length ? <span className="fstop-more">{fmt(s.stopped.length)} of {fmt(lost)}</span> : null}
                 </div>
               ) : null}
             </div>
@@ -209,20 +290,41 @@ const pct = (s: number, f: number) => (s ? ((s - f) / s) * 100 : 0);
 const fmtp = (p: number) => `${p.toFixed(1).replace(/\.0$/, '')}%`;
 export const SMALL_SAMPLE = 5;
 
-export function compareSummary(rows: CompareRow[]): { worse: number; better: number; same: number; small: number } {
+export type CompareBaseline = 'a' | 'b';
+
+/** Change in drop for one row, in percentage points, relative to the baseline group (positive = more drop than the baseline). */
+export function dropChange(r: CompareRow, baseline: CompareBaseline = 'a'): number {
+  const da = pct(r.a.start, r.a.finish), db = pct(r.b.start, r.b.finish);
+  return baseline === 'a' ? db - da : da - db;
+}
+
+/** Worse / better / unchanged counts, read against the baseline ("worse" = more drop than the baseline group). */
+export function compareSummary(rows: CompareRow[], baseline: CompareBaseline = 'a'): { worse: number; better: number; same: number; small: number } {
   let worse = 0, better = 0, same = 0, small = 0;
   for (const r of rows) {
-    const d = pct(r.b.start, r.b.finish) - pct(r.a.start, r.a.finish);
+    const d = dropChange(r, baseline);
     if (r.a.start < SMALL_SAMPLE || r.b.start < SMALL_SAMPLE) small++;
     if (d >= 0.5) worse++; else if (d <= -0.5) better++; else same++;
   }
   return { worse, better, same, small };
 }
 
-/** A vs B, level by level: summary strip, grouped headers, pinned first column, change cell last. */
-export function CompareTable({ rows, aLabel, bLabel, firstColumn = 'Level' }: { rows: CompareRow[]; aLabel: string; bLabel: string; firstColumn?: string }): ReactElement {
-  const s = compareSummary(rows);
+export type CompareTableProps = {
+  rows: CompareRow[];
+  aLabel: string;
+  bLabel: string;
+  firstColumn?: string;
+  /** which group the change is measured against; its header says "baseline" and the change column says "vs A" / "vs B" */
+  baseline?: CompareBaseline;
+  /** units and caveats under the table; replaces the default note */
+  footnote?: ReactNode;
+};
+
+/** A vs B, level by level: summary strip, grouped headers (the baseline named), pinned first column, change cell last, footnote. */
+export function CompareTable({ rows, aLabel, bLabel, firstColumn = 'Level', baseline = 'a', footnote }: CompareTableProps): ReactElement {
+  const s = compareSummary(rows, baseline);
   const mark = (n: number) => (n < SMALL_SAMPLE ? <i className="ss" title={`Small sample: fewer than ${SMALL_SAMPLE} players`}>◦</i> : null);
+  const base = baseline === 'a' ? 'A' : 'B', other = baseline === 'a' ? 'B' : 'A';
   return (
     <>
       <div className="sumstrip">
@@ -230,15 +332,16 @@ export function CompareTable({ rows, aLabel, bLabel, firstColumn = 'Level' }: { 
         <Tag kind="ok" dot>{s.better} better</Tag>
         <Tag kind="plain">{s.same} unchanged</Tag>
         <span>{s.small} with small samples <i className="ss" style={{ margin: 0 }}>◦</i></span>
+        <span className="cmp-base">relative to {base} · {baseline === 'a' ? aLabel : bLabel} (baseline)</span>
       </div>
       <div className="cmp-wrap">
         <table className="cmp">
           <thead>
             <tr className="g1">
               <th rowSpan={2} className="lvh">{firstColumn}</th>
-              <th colSpan={3} className="grp">{aLabel} · A</th>
-              <th colSpan={3} className="grp sep">{bLabel} · B</th>
-              <th rowSpan={2} className="sep">Drop change · B vs A</th>
+              <th colSpan={3} className={cx('grp', baseline === 'a' && 'base')}>{aLabel} · A{baseline === 'a' ? <small> · baseline</small> : null}</th>
+              <th colSpan={3} className={cx('grp sep', baseline === 'b' && 'base')}>{bLabel} · B{baseline === 'b' ? <small> · baseline</small> : null}</th>
+              <th rowSpan={2} className="sep">Drop change · {other} vs {base}</th>
             </tr>
             <tr className="g2">
               <th className="n">Start</th><th className="n">Finish</th><th className="n">Drop</th>
@@ -247,7 +350,7 @@ export function CompareTable({ rows, aLabel, bLabel, firstColumn = 'Level' }: { 
           </thead>
           <tbody>
             {rows.map((r) => {
-              const pa = pct(r.a.start, r.a.finish), pb = pct(r.b.start, r.b.finish), d = pb - pa;
+              const pa = pct(r.a.start, r.a.finish), pb = pct(r.b.start, r.b.finish), d = dropChange(r, baseline);
               return (
                 <tr key={r.key}>
                   <td className="lv mono">{r.key}</td>
@@ -260,7 +363,7 @@ export function CompareTable({ rows, aLabel, bLabel, firstColumn = 'Level' }: { 
           </tbody>
         </table>
       </div>
-      <div className="foot-note">pp = percentage points · ◦ small sample (under {SMALL_SAMPLE} players) · observed behaviour, not proof that a release caused a change</div>
+      <div className="foot-note">{footnote ?? <>pp = percentage points · ◦ small sample (under {SMALL_SAMPLE} players) · observed behaviour, not proof that a release caused a change</>}</div>
     </>
   );
 }

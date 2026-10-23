@@ -1251,6 +1251,122 @@ body[data-style="nutstyle"] #palRow [data-for~="nutstyle"], body[data-style="poc
 .delight .pxhost { min-height: 150px; border-radius: var(--r-card); display: grid; place-items: center; border: var(--bw) dashed var(--line-strong); }
 .delight .pop-scroll.glide { border: var(--bw) solid var(--line); border-radius: 10px; }
 .delight .stepper-view { transition: height .5s var(--ease-spring); }
+
+/* 0.3.0 shared patterns (mirrors the tail of ux/assets/components.css) */
+/* ───── 0.3.0: shared patterns ported from AVN Analytics (query regions, forms, disclosures, per-day table, date range, funnel timing / stopped-here, named baseline) ───── */
+/* regions */
+/* Staging: query regions, content-shaped skeletons and forms (@avn/ui regions.tsx, forms.tsx).
+   To be merged into components.css by the integrator. Roles only. */
+
+/* ── Query region ── */
+.qr { min-width: 0; }
+.qr-upd { display: flex; align-items: center; padding: 6px 0 10px; }
+
+/* ── Content-shaped skeletons (.sk is the shimmer line from components.css) ── */
+.skb { min-width: 0; }
+.skb-rows { display: flex; flex-direction: column; }
+.skb-row { display: flex; align-items: center; gap: 16px; min-height: 42px; border-bottom: var(--bw) solid var(--line); }
+.skb-row:last-child { border-bottom: 0; }
+.skb-row .sk { flex: 1; min-width: 0; }
+.skb-row .sk:first-child { flex: 0 0 auto; }
+.skb-row:nth-child(even) .sk { opacity: .6; }
+.skb-chart { height: 180px; display: flex; align-items: flex-end; gap: 10px; border-bottom: var(--bw) solid var(--line); }
+.skb-chart .sk { flex: 1; width: auto; border-radius: 4px 4px 0 0; }
+
+/* ── Forms ── */
+.form-err { font-size: 12.5px; line-height: 1.5; color: var(--bad); background: var(--bad-soft); border: var(--bw) solid color-mix(in srgb, var(--bad) 40%, var(--line)); border-radius: var(--r-ctl); padding: 10px 12px; margin: 0 0 14px; }
+.form-err:empty { display: none; }
+.fld .hint { display: block; margin-top: 6px; font-size: 12.5px; color: var(--dim); }
+.fld .hint:empty { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .skb .sk { animation: none; }
+}
+
+/* daterange */
+/* ───────── Date range (packages/ui/src/daterange.tsx) ─────────
+   Staged for merge into components.css. Roles only. Reuses .select, .btn.sm, .pop, .pop-foot, .cal. */
+.range { display: grid; gap: 10px; }
+.range-compact { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.range-modes { display: inline-flex; flex-wrap: wrap; gap: 6px; max-width: 100%; }
+.range-modes .btn[aria-pressed="true"] { background: var(--raise); border-color: var(--line-strong); }
+.range-body { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.range-nav { width: 34px; padding: 0; font-size: 16px; line-height: 1; color: var(--muted); }
+.range-nav:hover { color: var(--text); }
+.range-days { font-size: 12.5px; }
+.range-pop .pop-foot { align-items: center; font-size: 12.5px; }
+@container app (max-width: 620px) {
+  .range-compact .range-days { flex: 1; min-width: 0; justify-content: center; }
+}
+
+/* activity */
+/* ───────── Staging: remembered disclosures, collapsible panel, per-day table, trend line ─────────
+   Roles only. The integrator merges these blocks into components.css (after .panel / .ph, and after table.t). */
+
+/* Remembered disclosure (`RememberedDetails`): a <details> whose open state is remembered per name. */
+.fold > summary { display: flex; align-items: center; gap: 8px; cursor: pointer; list-style: none; color: var(--text); font-weight: 600; }
+.fold > summary::-webkit-details-marker { display: none; }
+.fold > summary::before { content: ""; width: 6px; height: 6px; border-right: 1.5px solid var(--muted); border-bottom: 1.5px solid var(--muted); transform: rotate(-45deg); transition: transform .2s var(--ease); }
+.fold[open] > summary::before { transform: rotate(45deg); }
+.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Collapsible panel (`CollapsiblePanel`): folds to its header, a one-line note beside it while folded. */
+.collapse-toggle { flex: none; margin-left: -8px; }
+.collapse-toggle .ic { transition: transform .2s var(--ease); }
+.panel.collapsed .collapse-toggle .ic { transform: rotate(-90deg); }
+.collapse-head { flex: 1 1 0; min-width: 0; }
+.collapse-note { flex: 1 1 100%; min-width: 0; font-size: 12px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.panel.collapsed > .ph { border-bottom: 0; }
+.panel.collapsed .collapse-head p { display: none; }
+.panel.collapsed .collapse-head h2 { font-weight: 600; color: var(--muted); }
+.collapse-body[hidden] { display: none; }
+@media (prefers-reduced-motion: reduce) { .collapse-toggle .ic, .fold > summary::before { transition: none; } }
+
+/* Per-day table (`DailyTable`): total line, then a dense table with a bar relative to the busiest day. */
+.daily { min-width: 0; }
+.range-total { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; padding: 6px 16px 12px; }
+.range-total strong { font-family: var(--font-px); font-weight: var(--w-display); font-size: 26px; line-height: 1; color: var(--num); font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+.range-total span { font-size: 12px; color: var(--muted); }
+.daily-wrap { overflow-x: auto; }
+.t th.daily-bar, .t td.daily-bar { width: 45%; }
+progress.rel { display: block; width: 100%; height: 8px; border: 0; border-radius: 4px; background: var(--raise); overflow: hidden; appearance: none; -webkit-appearance: none; }
+progress.rel::-webkit-progress-bar { background: var(--raise); border-radius: 4px; }
+progress.rel::-webkit-progress-value { background: var(--bar); border-radius: 4px; transition: width .4s var(--ease); }
+progress.rel::-moz-progress-bar { background: var(--bar); border-radius: 4px; }
+.t tbody tr:last-child progress.rel::-webkit-progress-value { background: var(--accent); }
+.t tbody tr:last-child progress.rel::-moz-progress-bar { background: var(--accent); }
+
+/* Trend line (`TrendLine`): inline sparkline for dense tables; scale from 0, last point marked. */
+.trend { display: block; width: 90px; height: 22px; overflow: visible; }
+.trend polyline { fill: none; stroke: var(--bar); stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
+.trend circle { fill: var(--accent); }
+
+/* data */
+/* Staging for ux/assets/components.css — data.tsx: funnel timing line, "Stopped here" list, N-segment bars, named baseline.
+   Roles only. The integrator merges this next to the existing .fdrop / .fun / .cmp blocks. */
+
+/* Funnel: timing line between steps (median shown; hover / screen readers get the fuller numbers) */
+.fdrop .ft { text-decoration: underline dotted; text-underline-offset: 3px; cursor: help; }
+
+/* Funnel: who stopped after a step, under the drop line; shares the drop's dashed left rule */
+.fstop { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin-left: 28px; padding: 2px 16px 6px 22px; font-size: 12px; color: var(--dim); position: relative; }
+.fstop::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; border-left: 2px dashed var(--line-strong); }
+.fstop.worst::before { border-color: var(--bad); }
+.fstop .fstop-l { color: var(--muted); }
+.fstop .fstop-p > a, .fstop .fstop-p > button { display: inline-flex; align-items: baseline; gap: 6px; padding: 2px 8px; border: var(--bw) solid var(--line); border-radius: 6px; background: var(--panel); color: var(--text); font: inherit; cursor: pointer; text-decoration: none; }
+.fstop .fstop-p > a:hover, .fstop .fstop-p > button:hover { border-color: var(--accent); }
+.fstop .fstop-p > a:focus-visible, .fstop .fstop-p > button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.fstop .fstop-p small { color: var(--dim); font-size: 11px; }
+.fstop .fstop-more { color: var(--dim); }
+@container app (max-width: 620px) {
+  .fstop { margin-left: 22px; }
+}
+
+/* Compare: the baseline group is named in its header and in the summary strip */
+.cmp th.grp.base small { font-size: inherit; letter-spacing: inherit; color: var(--muted); font-weight: 400; }
+.sumstrip .cmp-base { margin-left: auto; color: var(--dim); }
+
+
 </style>
 </head>
 <body>
@@ -1669,6 +1785,51 @@ body[data-style="nutstyle"] #palRow [data-for~="nutstyle"], body[data-style="poc
     <p class="hint" style="margin-top:12px">All three open under their control on desktop and tablet (at most 460 px tall, scrolling inside). On a phone they become a bottom sheet with 44 to 46 px rows. Esc or a tap outside closes them, and every row is a real button, so they work by keyboard.</p>
   </section>
 
+  <section id="shared">
+    <div class="sec-head"><h2>Shared patterns · from Analytics</h2><p>New in 0.3.0. Six things the Analytics website had to hand-roll, now in <code>@avn/ui</code> and plain CSS so every tool gets them: query regions, forms, remembered disclosures, the per-day table, the date range, and richer funnel and compare tables.</p></div>
+    <div class="grid-3">
+      <div class="card"><h3>Query region · never blank what is on screen</h3>
+        <div class="qr" aria-busy="true"><div class="qr-upd" role="status"><span class="spinner sm"></span><span>Updating… Showing previous results.</span></div>
+          <table class="t"><thead><tr><th>Level</th><th class="num">Started</th><th class="num">Drop</th></tr></thead><tbody><tr><td class="mono">12</td><td class="num">1,204</td><td class="num">18.2%</td></tr><tr><td class="mono">13</td><td class="num">985</td><td class="num">22.6%</td></tr></tbody></table></div>
+        <p class="hint">Skeleton → error with Try again → content. A newer answer loading for data already on screen keeps the content and says so; a failed refetch keeps it under a banner.</p>
+      </div>
+      <div class="card"><h3>Form · one alert line, fixes under the field</h3>
+        <form onsubmit="return false" style="display:flex;flex-direction:column;gap:10px">
+          <div class="fld"><label for="shPkg">Package name</label><input id="shPkg" value="com.avn.nutsort" spellcheck="false" aria-describedby="shPkgH"><span class="hint" id="shPkgH">Reverse-domain, like com.studio.game.</span></div>
+          <div class="fld bad"><label for="shName">Game name</label><input id="shName" value="" aria-invalid="true" aria-describedby="shNameE"><div class="msg" id="shNameE"><svg class="ic"><use href="#i-alert"/></svg>Give the game a name.</div></div>
+          <div class="form-err" role="alert">The server didn’t answer. Your changes are still here.</div>
+          <div class="row-wrap"><button class="btn primary" type="submit" disabled aria-busy="true"><span class="spinner sm"></span>Saving…</button></div>
+        </form>
+        <p class="hint">One submit in flight at a time; a thrown error lands in the alert line; each field explains its own fix.</p>
+      </div>
+      <div class="card"><h3>Date range · presets, compact row, stepping</h3>
+        <div class="range range-compact"><button class="select" type="button"><span>Last 7 days</span><svg class="ic"><use href="#i-caret"/></svg></button><button class="btn sm range-nav" type="button" aria-label="Previous range">‹</button><button class="select mono range-days" type="button">Oct 16 – Oct 22</button><button class="btn sm range-nav" type="button" aria-label="Next range">›</button></div>
+        <div class="range-modes" style="margin-top:10px"><button class="btn sm" aria-pressed="false">Today</button><button class="btn sm" aria-pressed="false">Yesterday</button><button class="btn sm" aria-pressed="true">Last 7 days</button><button class="btn sm" aria-pressed="false">Last 30 days</button><button class="btn sm" aria-pressed="false">This month</button><button class="btn sm" aria-pressed="false">Custom…</button></div>
+        <p class="hint">Presets show their days as the hint; ‹ › move the range by its own length; the full variant shows every preset as a pressed button.</p>
+      </div>
+      <div class="card"><h3>Collapsible panel · a note while folded</h3>
+        <div class="panel collapsed"><div class="ph"><button class="icon-btn collapse-toggle" type="button" aria-expanded="false" aria-label="Show result"><svg class="ic"><use href="#i-caret"/></svg></button><div class="collapse-head"><b>Result</b></div><span class="collapse-note">1,204 started · 312 completed · 25.9%</span></div><div class="collapse-body" hidden></div></div>
+        <details class="fold" style="margin-top:10px" open><summary>Setup</summary><p class="muted" style="font-size:13px;margin:6px 0 0">Remembered per name and per owner: closing “Setup” on one player keeps it closed on the next.</p></details>
+        <p class="hint">A folded panel still answers its question; disclosures remember their state per owner.</p>
+      </div>
+      <div class="card"><h3>Per-day table · gaps stay visible</h3>
+        <div class="range-total"><strong>1,500</strong><span>events · Mon, Oct 20 → Thu, Oct 23 · 4 days</span></div>
+        <div class="daily-wrap"><table class="t daily"><thead><tr><th>Day</th><th class="num">Events</th><th><span class="visually-hidden">Relative volume</span></th></tr></thead><tbody>
+          <tr><td class="mono">2026-10-20</td><td class="num">620</td><td class="daily-bar"><progress class="rel" max="620" value="620" aria-label="620 events on 2026-10-20"></progress></td></tr>
+          <tr><td class="mono">2026-10-21</td><td class="num">0</td><td class="daily-bar"><progress class="rel" max="620" value="0" aria-label="0 events on 2026-10-21"></progress></td></tr>
+          <tr><td class="mono">2026-10-22</td><td class="num">410</td><td class="daily-bar"><progress class="rel" max="620" value="410" aria-label="410 events on 2026-10-22"></progress></td></tr>
+          <tr><td class="mono">2026-10-23</td><td class="num">470</td><td class="daily-bar"><progress class="rel" max="620" value="470" aria-label="470 events on 2026-10-23"></progress></td></tr>
+        </tbody></table></div>
+        <p class="hint">Missing days are filled in as 0; bars are relative to the busiest day; a total of 0 shows the empty state, never an empty table.</p>
+      </div>
+      <div class="card"><h3>Funnel · timing, stopped here, named baseline</h3>
+        <div class="fdrop" data-worst=""><span>↓ 219 players left (18.2%) <span class="ft" title="985 players · average 20s · fastest 3s · slowest 2m 05s · 90% within 48s">· median 12s to the next step</span> · biggest drop</span></div>
+        <div class="fstop worst"><span class="fstop-l">Stopped here:</span><button class="fstop-p" type="button">u_7f3a2c <small>2 h ago</small></button><button class="fstop-p" type="button">d_19b0ee <small>yesterday</small></button><span class="fstop-more">2 of 219</span></div>
+        <div class="sumstrip" style="margin-top:12px"><span class="tag bad dot">6 worse</span><span class="tag ok dot">9 better</span><span class="tag plain">5 unchanged</span><span class="cmp-base">relative to A · 0.1.2 (baseline)</span></div>
+        <p class="hint">The median is the one number on the line; the rest is in the hover. The biggest drop is the only drop marked. Compare tables say which group is the baseline.</p>
+      </div>
+    </div>
+  </section>
   <section>
     <div class="sec-head"><h2>Data patterns</h2><p>Two more patterns from Analytics that carry over to every tool.</p></div>
     <div class="grid-2">

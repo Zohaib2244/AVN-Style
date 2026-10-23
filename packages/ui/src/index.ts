@@ -13,3 +13,8 @@ export * from './pixel-icon';
 export * from './marks';
 export * from './flows';
 export * from './pixel-field';
+export * from './regions';
+export * from './forms';
+export * from './disclosure';
+export * from './activity';
+export * from './daterange';

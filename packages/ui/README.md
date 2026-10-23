@@ -26,14 +26,19 @@ The best worked example is [`demo/main.tsx`](demo/main.tsx) (`npm run demo` from
 | `shell.tsx` | `AppShell` `Sidebar` `SidebarNav` (sliding highlight) `Brand` `GameSwitcher` `AccountMenu` `Workspace` `TopBar` `SearchButton` `IconButton` `PageHead` `Page` `TabBar` `MoreSheet` `CommandPalette` (`scoreCommand`, `filterCommands`) |
 | `primitives.tsx` | `Tag` `Count` `Button` `Segmented` `Delta` / `formatDelta` `Sparkline` `RollingNumber` `Kpi` `Panel` `EmptyState` `STATUS_MEANING` |
 | `feedback.tsx` | `Skeleton` `PageSkeleton` `LoadBar` `StatusLine` `ErrorPanel` `Banner` `Freshness` `ToastProvider` / `useToast` (`stackToast`, `TOAST_MS`, `MAX_TOASTS`) `NotificationList` `BellButton` |
-| `overlays.tsx` | `Drawer` `DialogShell` `ConfirmDelete` (typed name) `ShortcutsDialog` `Definition` `DefinitionGroup` (warm tooltips) `Popover` `MultiSelect` `SingleSelect` `Calendar` (`pickDay`, `monthGrid`) |
+| `overlays.tsx` | `Drawer` `DialogShell` `ConfirmDelete` (typed name) `ShortcutsDialog` `Definition` `DefinitionGroup` (warm tooltips) `Popover` `MultiSelect` `SingleSelect` `Calendar` (`CalendarRange`, `pickDay`, `monthGrid`) |
 | `rules.tsx` | condition model (`matchesEvent`, `conditionError`, `updateNode`) `ConditionSentence` `RuleSentence` `RuleBar` `ConditionEditor` `RulePreview` `HighlightsBar` `Timeline` |
-| `data.tsx` | `BarChart` `SurvivalCurve` `HeatStrip` `FunnelHeadline` `FunnelResult` `OptionChip` `CompareTable` (`compareSummary`, `dropToNext`, `steepest`, `biggestDrop`) `useWidth` |
+| `data.tsx` | `BarChart` `SurvivalCurve` `HeatStrip` `FunnelHeadline` `FunnelResult` (`timingText`, `duration`, `SEGMENT_COLOURS`) `OptionChip` `CompareTable` (`compareSummary`, `dropChange`, `dropToNext`, `steepest`, `biggestDrop`) `useWidth` |
 | `cards.tsx` | `GameCard` `GamesGrid` `InsightCard` `Insights` `Kpis` `SectionLabel` `SectionTile` `Tiles` `NeedsALook` `SetupChecklist` `StatusStrip` `Pipeline` `FilterBar` |
 | `assistant.tsx` | `NutBotPanel` `PromptBar` (`parseToken`) `ThoughtLine` `ToolCallChip` `ToolTrace` `Block` (table, checklist, chart, custom, proposal) |
 | `marks.tsx` | `StatusMark` `Bits` `SpringCheck` `Lattice` (`LATTICE_PATTERNS`, `fmtElapsed`) `Heartbeat` `RollingText` `BranchList` `useRect` |
 | `flows.tsx` | `CodeSlots` (`insertDigits`, `digitsOf`) `Stepper` `Step` |
 | `pixel-field.tsx` | `PixelField` (`roleColour`) |
+| `regions.tsx` | `QueryRegion` (skeleton → error with Try again → content; "Updating… Showing previous results." while refetching with data) `SkeletonBlock` (stats / table rows×columns / chart) `errorText` `QueryLike` |
+| `forms.tsx` | `useSubmit` (one submit in flight; values + form element to the handler; thrown errors land in `error`) `FormError` (the form's `role="alert"` line) `Field` (label + control + hint/error) `formValues` |
+| `disclosure.tsx` | `RememberedDetails` (`rememberedOpen`, `rememberOpen`) `CollapsiblePanel` (`useCollapsed`) |
+| `activity.tsx` | `DailyTable` (`fillDays`, `prettyDay`) `TrendLine` (`trendPoints`) |
+| `daterange.tsx` | `DateRange` (compact or full; presets, From–To days, ‹ › steps, calendar) `PRESETS` `resolveRange` `rangeText` `shiftRange` `presetLabel` ISO day helpers (`todayISO`, `addDays`, `daysBetween`, `dayToDate`, `dateToDay`, `shortDay`) |
 | `pixel-icon.tsx` | `PixelIcon` `pixelIconSVG` `PIXEL_ICONS` `ICON_COLORS` |
 | `icons.tsx` | `Icon` (line icons by name) |
 | `context.tsx` | `AppContainerProvider` `useAppContainer` `useAppElement` (so portals render inside the container the layout queries) |
