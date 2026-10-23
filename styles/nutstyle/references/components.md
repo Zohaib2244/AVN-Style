@@ -1,4 +1,4 @@
-# Components (classes in `assets/base.css`)
+# Components (classes in `hub-base.css`)
 
 | Class | What |
 |---|---|

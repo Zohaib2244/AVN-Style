@@ -1,0 +1,56 @@
+{
+  "name": "@avn/ui",
+  "version": "0.1.0",
+  "description": "Shared React components for AVN dashboards and tools (plain CSS, Motion animation)",
+  "type": "module",
+  "license": "UNLICENSED",
+  "files": [
+    "dist",
+    "css"
+  ],
+  "main": "./dist/avn-ui.js",
+  "module": "./dist/avn-ui.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/avn-ui.js"
+    },
+    "./css/*": "./css/*"
+  },
+  "sideEffects": [
+    "*.css"
+  ],
+  "scripts": {
+    "sync-css": "node scripts/sync-css.mjs",
+    "build": "npm run sync-css && tsc -p tsconfig.build.json && vite build",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "check": "npm run typecheck && npm test && npm run build",
+    "demo": "npm run sync-css && vite --config demo/vite.config.ts"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.0",
+    "@radix-ui/react-tooltip": "^1.1.0",
+    "motion": "^12.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.4.0",
+    "@testing-library/react": "^16.0.0",
+    "@testing-library/user-event": "^14.5.0",
+    "@types/node": "^22.20.5",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "jsdom": "^25.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.6.0",
+    "vite": "^5.4.0",
+    "vitest": "^2.1.0"
+  }
+}

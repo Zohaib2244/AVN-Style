@@ -72,7 +72,7 @@ canvas down.
 ## Accessibility
 
 - Visible `:focus-visible` ring on every interactive element; state is never colour
-  alone (see nutstyle `references/states.md`).
+  alone (see `ux/references/feedback.md`).
 - Keyboard focus on a widget is tracked (`data-kb-focus`); clicking bare canvas
   clears it.
 - Everything non-interactive during an install is `inert`, not just

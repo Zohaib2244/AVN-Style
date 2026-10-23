@@ -1,28 +1,38 @@
 ---
-name: nutstyle
-description: AVN Style / Nutstyle — warm, dense, monospace "Chunky Blocks + Accent Border" front-end design system extracted from AVN Hub. Use before writing any UI, CSS or HTML for the user's web projects so the look matches AVN Hub.
+name: avn-design
+description: Entry point for designing or changing UI in Zohaib's web projects (AVN Analytics, AVN PlayLens and any new dashboard or tool site). Use before writing any UI, CSS, HTML or page layout. Routes to the UX rules (ux/) and the project's chosen style (styles/<name>/).
 ---
 
-# AVN Style (Nutstyle)
+# AVN design
 
-Warm, dense, monospace. Sticker cards with a **hard offset shadow and zero blur**,
-two accent slots, 14 tokens × 8 palettes × dark + light, root font-size 17px.
-AVN Hub is the source of truth for the look; this package is the portable copy.
+Two layers, always used together:
+
+1. **UX** — `ux/SKILL.md`. How the tool works: page patterns, components, behaviour,
+   words, loading/errors/toasts, NutBot. The same for every style. Covers dashboards
+   and tool sites; its *Foundations* also apply to any web app.
+2. **Style** — `styles/<name>/SKILL.md`. How it looks: colours, fonts, shape, icons,
+   flavour. Swappable.
+
+The **contract** (`contract.md`) is the list of roles a style fills and the UX uses.
 
 ## Use it
-1. Include `assets/tokens.css`, then `assets/base.css`.
-2. Fonts: DotGothic16 (labels, stats, titles) + JetBrains Mono (content). Next.js: `next/font/google` with variables `--font-dot-gothic` and `--font-jetbrains-mono`. Anything else: add `assets/fonts-standalone.css`.
-3. Pick a mode and palette on `<html>`: `data-theme="light|dark"` (dark default) and `data-palette="slate|moss|plum|reef|raspberry|circuit|graphite"` (none = ember).
-4. Open `assets/preview.html` in a browser to see every token and component.
 
-## Hard rules
-- Every colour is a token. No raw hex, no pure black/white.
-- Cards: `border-radius` 12–16px, `1.5px solid var(--border)`, `box-shadow: 3–5px 3–5px 0 var(--shadow)`. **Never blur a shadow.**
-- Font sizes come only from the five-step scale `--fs-micro|label|body|lead|stat`. No ad-hoc rem/px.
-- Text colour is a role: `--text-muted-dim` = labels, `--text-muted` = content. Do not swap them.
-- Accent slots are named `--accent-orange` (primary) and `--accent-cyan` (secondary) regardless of actual hue.
-- Never: Inter/Roboto/Arial/system fonts, purple gradients, neon glow, CRT scanlines/grain, centered portfolio layouts.
-- Both themes are first-class — check dark and light.
+1. Find the project's line in its `AGENTS.md` / `CLAUDE.md`, e.g.
+   `Design: avn-design · UX: avn-ux · Style: avn-family`. No line? Ask which style.
+2. Read `ux/SKILL.md`, then the style's `SKILL.md`.
+3. Build with `ux/assets/components.css` + the style's `tokens.css` (and its optional
+   `skin.css` / `flavour.css`).
+4. Before saying you're done, run the self-check in `ux/references/process.md`.
 
-## Read next
-`references/tokens.md` · `typography.md` · `components.md` · `motion.md` · `layout.md` · `porting.md`
+## Styles here
+
+| Style | Look | Folder |
+|---|---|---|
+| AVN Family | calm warm dark, Pixelify titles, pixel icons, personal flavour | `styles/avn-family/` |
+| Nutstyle | AVN Hub's chunky sticker cards, DotGothic, offset shadows | `styles/nutstyle/` |
+| New style | copy the template | `styles/_template/` |
+
+AVN Hub's own screen architecture is separate: `avnhub-design/` (uses Nutstyle).
+
+`board/index.html` is the live style board: every pattern working, both styles,
+every palette, three widths. Open it in a browser.
