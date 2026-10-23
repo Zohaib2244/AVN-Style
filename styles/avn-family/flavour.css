@@ -1,5 +1,5 @@
 /* AVN Family · flavour.css — the personal layer (see FLAVOUR.md).
-   Pixel icons and status spark, boot screen, scenes (Dora, the mini PC),
+   Pixel icons and status spark, boot screen, scenes (Dora, the mini PC, quiet night),
    isometric block piles, starfield, icon shine. Optional: the UX works
    without this file. */
 
@@ -30,6 +30,9 @@
 .scene .blink2 { animation-delay: .4s; }
 .scene .blink3 { animation-delay: .8s; }
 .scene .pk { opacity: 0; animation: pk 2.4s linear infinite; }
+.scene.night .st { animation: twinkle 2.6s steps(2) infinite; animation-delay: calc(var(--d, 0) * -.37s); }
+.scene.night .cm { animation: comet 9s linear infinite; }
+@keyframes comet { 0% { transform: translate(0, 0); opacity: 0; } 8%, 88% { opacity: 1; } 100% { transform: translate(36px, 9px); opacity: 0; } }
 @keyframes breathe { 50% { transform: scaleY(1.07); } }
 @keyframes zz { 0% { opacity: 0; transform: translate(0, 0); } 30% { opacity: 1; } 100% { opacity: 0; transform: translate(3px, -6px); } }
 @keyframes pk { 0% { transform: translateX(0); opacity: 0; } 10%, 85% { opacity: 1; } 100% { transform: translateX(15px); opacity: 0; } }

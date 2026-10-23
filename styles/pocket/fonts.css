@@ -1,0 +1,4 @@
+/* Pocket fonts. Next.js: load the same families with next/font/google and
+   set --font-px, --font-ui and --font-mono on <html> instead of this file.
+   Fallback stacks live in tokens.css. */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap");

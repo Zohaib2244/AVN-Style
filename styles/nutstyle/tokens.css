@@ -25,6 +25,7 @@
   --bw: 1.5px; --r-card: 12px; --r-ctl: 8px;
   --lift: 3px 3px 0 var(--shadow-c); --lift-btn: 2px 2px 0 var(--shadow-c);
   --ease: cubic-bezier(.33, 1, .68, 1);
+  --ease-spring: steps(5, end); /* sticker look: things land in steps, not a bounce */
 
   --bg: light-dark(#d8cfbc, #13100c);
   --panel: light-dark(#f5f0e6, #1e1a14);

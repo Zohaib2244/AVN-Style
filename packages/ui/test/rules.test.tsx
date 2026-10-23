@@ -163,7 +163,7 @@ describe('ConditionEditor', () => {
   it('switches the group between all and any', async () => {
     const user = userEvent.setup();
     render(<Host initial={group('all', param('level', 'eq', '1'))} />);
-    await user.click(screen.getByRole('button', { name: 'any (OR)' }));
+    await user.click(screen.getByRole('radio', { name: 'any (OR)' }));
     expect(read().match).toBe('any');
   });
   it('typing a value updates the tree; switching to event name resets the operator', async () => {

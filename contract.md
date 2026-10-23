@@ -88,6 +88,7 @@ Never system UI defaults for display; every font needs a real fallback stack.
 | `--shadow-c` | offset-shadow colour (or `transparent`) |
 | `--lift`, `--lift-btn` | box-shadow of cards / buttons (`none` allowed) |
 | `--ease` | the main easing curve |
+| `--ease-spring` | the landing curve for things that settle with a little overshoot: segmented thumbs, checks, code digits, stepper tiles. A `linear()` spring or a back-out `cubic-bezier`; a calm style may set it equal to `--ease` |
 
 ## Rules
 

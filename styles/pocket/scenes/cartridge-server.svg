@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="scene" viewBox="0 0 44 24" shape-rendering="crispEdges" role="img" aria-label="The HP mini PC, drawn as a cartridge sliding into the top of a handheld, with packets arriving">
+  <!-- the handheld's top edge, seen from the front -->
+  <g fill="currentColor">
+    <rect x="2" y="14" width="13" height="1"/>
+    <rect x="29" y="14" width="13" height="1"/>
+    <rect x="2" y="14" width="1" height="10"/>
+    <rect x="41" y="14" width="1" height="10"/>
+    <rect x="14" y="14" width="1" height="4"/>
+    <rect x="29" y="14" width="1" height="4"/>
+    <!-- shoulder buttons -->
+    <rect x="4" y="12" width="6" height="2"/>
+    <rect x="34" y="12" width="6" height="2"/>
+    <!-- speaker grille -->
+    <rect x="35" y="19" width="1" height="3"/>
+    <rect x="37" y="19" width="1" height="3"/>
+    <rect x="39" y="19" width="1" height="3"/>
+  </g>
+  <!-- power light -->
+  <rect class="blink" x="5" y="18" width="1" height="1" fill="var(--accent)"/>
+  <!-- the mini PC as a cartridge, seated in the slot -->
+  <g class="cart">
+    <g fill="currentColor">
+      <rect x="16" y="4" width="12" height="1"/>
+      <rect x="16" y="4" width="1" height="11"/>
+      <rect x="27" y="4" width="1" height="11"/>
+      <rect x="16" y="14" width="12" height="1"/>
+      <!-- grip ribs -->
+      <rect x="17" y="2" width="2" height="2"/>
+      <rect x="20" y="2" width="2" height="2"/>
+      <rect x="23" y="2" width="2" height="2"/>
+      <rect x="26" y="2" width="2" height="2"/>
+      <!-- label: vents -->
+      <rect x="18" y="7" width="8" height="1"/>
+      <rect x="18" y="9" width="8" height="1"/>
+      <rect x="18" y="11" width="5" height="1"/>
+    </g>
+    <rect x="25" y="11" width="1" height="1" fill="var(--accent)"/>
+  </g>
+  <!-- packets: batches delivered into the cartridge -->
+  <rect class="pk" x="36" y="7" width="1" height="1" fill="var(--accent)"/>
+  <rect class="pk pk2" x="36" y="9" width="1" height="1" fill="var(--accent)"/>
+  <rect class="pk pk3" x="36" y="11" width="1" height="1" fill="var(--accent)"/>
+</svg>

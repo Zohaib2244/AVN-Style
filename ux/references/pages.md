@@ -17,7 +17,7 @@ Filter bar → optional rule bar (`rules-and-highlights.md`) → optional summar
 Status strip (live dot, last event, today's count, overall tag) → chart + "Needs a look" → pipeline timeline (Verified / Done / waiting steps, packets moving while live) → recent activity table (e.g. deliveries: delivered, delivered after retry, rejected with reason).
 
 ## Setup flow (pairing, SDK setup, rules file)
-Numbered steps with Done → Verified states; the current step is expanded; springy check when a step verifies. Never more than one decision per step.
+The **stepper** (`components.md`): a track of step tiles with a glider on the current one, one pane at a time, Back / Continue in the footer, panes sliding in the direction of travel. Steps use Done → Verified states; a step's mark morphs to the check when it verifies. Codes are entered in code slots. Never more than one decision per step.
 
 ## Settings
 Sections of labelled fields. A **Danger zone** card at the end: reversible actions (archive) act immediately with Undo; permanent ones (delete data) open the typed-confirm dialog (`feedback.md`).

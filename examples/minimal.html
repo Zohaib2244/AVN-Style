@@ -21,7 +21,7 @@
 <body>
   <main class="page" id="page">
     <div class="bar">
-      <label>Style <select id="pick-style"><option value="avn-family">AVN Family</option><option value="nutstyle">Nutstyle</option></select></label>
+      <label>Style <select id="pick-style"><option value="avn-family">AVN Family</option><option value="nutstyle">Nutstyle</option><option value="pocket">Pocket</option></select></label>
       <label>Palette <select id="pick-pal"></select></label>
       <label>Theme <select id="pick-theme"><option value="">System</option><option value="dark">Dark</option><option value="light">Light</option></select></label>
     </div>
@@ -57,7 +57,9 @@
   </main>
 
   <script>
-    var PALETTES = { 'avn-family': ['', 'slate', 'moss', 'hibiscus', 'white'], nutstyle: ['', 'slate', 'moss', 'plum', 'reef', 'raspberry', 'circuit', 'graphite'] };
+    var PALETTES = { 'avn-family': ['', 'slate', 'moss', 'hibiscus', 'white'], nutstyle: ['', 'slate', 'moss', 'plum', 'reef', 'raspberry', 'circuit', 'graphite'], pocket: ['', 'mint', 'lagoon', 'grape'] };
+    // One extra file per style. Pocket loads skin.css here; its flavour.css is optional on top.
+    var EXTRA = { nutstyle: 'skin.css', pocket: 'skin.css' };
     // Preview a new style from its folder: minimal.html?style=my-style&extra=skin.css&palettes=ocean,dusk
     var q = new URLSearchParams(location.search), extra = {};
     if (q.get('style')) {
@@ -75,7 +77,7 @@
     function apply() {
       var s = $('pick-style').value, base = '../styles/' + s + '/';
       $('s-fonts').href = base + 'fonts.css'; $('s-tokens').href = base + 'tokens.css';
-      $('s-extra').href = base + (extra[s] || (s === 'nutstyle' ? 'skin.css' : 'flavour.css'));
+      $('s-extra').href = base + (extra[s] || EXTRA[s] || 'flavour.css');
       var p = $('pick-pal').value, t = $('pick-theme').value;
       p ? root.setAttribute('data-palette', p) : root.removeAttribute('data-palette');
       t ? root.setAttribute('data-theme', t) : root.removeAttribute('data-theme');

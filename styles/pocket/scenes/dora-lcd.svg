@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="scene" viewBox="0 0 40 27" shape-rendering="crispEdges" role="img" aria-label="Dora, a black cat, asleep on top of a monitor, drawn in one bit on an LCD">
+  <!-- 1-bit: ink pixels only, on nothing. currentColor = var(--text). -->
+  <g fill="currentColor">
+    <!-- monitor: frame, neck, base -->
+    <rect x="6" y="10" width="28" height="1"/>
+    <rect x="6" y="21" width="28" height="1"/>
+    <rect x="6" y="10" width="1" height="12"/>
+    <rect x="33" y="10" width="1" height="12"/>
+    <rect x="19" y="22" width="2" height="3"/>
+    <rect x="14" y="25" width="12" height="1"/>
+    <!-- a line of text left on the screen -->
+    <rect x="9" y="13" width="6" height="1"/>
+    <rect x="9" y="15" width="10" height="1"/>
+    <rect x="9" y="17" width="4" height="1"/>
+  </g>
+  <!-- power light on the bezel -->
+  <rect class="blink" x="31" y="20" width="1" height="1" fill="var(--accent)"/>
+  <!-- Dora, a loaf on the warm top edge -->
+  <g class="breathe" fill="currentColor">
+    <rect x="11" y="6" width="13" height="4"/>
+    <rect x="12" y="5" width="11" height="1"/>
+    <!-- tail curled round the front -->
+    <rect x="8" y="9" width="4" height="1"/>
+    <rect x="7" y="8" width="1" height="1"/>
+    <rect x="8" y="7" width="1" height="1"/>
+  </g>
+  <g fill="currentColor">
+    <!-- head -->
+    <rect x="23" y="4" width="7" height="6"/>
+    <rect x="24" y="3" width="5" height="1"/>
+    <!-- left ear -->
+    <rect x="23" y="2" width="1" height="2"/>
+    <rect x="24" y="2" width="1" height="1"/>
+    <!-- right ear: twitches now and then -->
+    <g class="tw">
+      <rect x="29" y="2" width="1" height="2"/>
+      <rect x="28" y="2" width="1" height="1"/>
+    </g>
+  </g>
+  <!-- eyes shut: two slits in the ink -->
+  <rect x="25" y="6" width="1" height="1" fill="var(--nested)"/>
+  <rect x="28" y="6" width="1" height="1" fill="var(--nested)"/>
+  <!-- dreaming -->
+  <g class="zz" fill="currentColor">
+    <rect x="32" y="3" width="1" height="1"/>
+    <rect x="33" y="2" width="1" height="1"/>
+  </g>
+  <g class="zz zz2" fill="currentColor">
+    <rect x="34" y="2" width="1" height="1"/>
+    <rect x="35" y="1" width="1" height="1"/>
+    <rect x="36" y="0" width="1" height="1"/>
+  </g>
+</svg>

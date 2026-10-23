@@ -1,8 +1,8 @@
 import { useState, type ReactElement, type ReactNode } from 'react';
-import { motion, useReducedMotion } from 'motion/react';
 import { cx, fmt } from './cx';
 import { Icon, type IconName } from './icons';
 import { Button, Segmented, Tag, type StatusKind } from './primitives';
+import { Heartbeat, StatusMark } from './marks';
 
 /* ───────── Games home ───────── */
 
@@ -100,7 +100,6 @@ const STEP_TAG: Record<SetupStep['state'], [StatusKind, string]> = { ok: ['ok', 
 /** Each step: status icon, title, one line, tag, one action. Collapsible; hide it once every step is verified. */
 export function SetupChecklist({ title, steps, defaultOpen = true }: { title: string; steps: SetupStep[]; defaultOpen?: boolean }): ReactElement | null {
   const [open, setOpen] = useState(defaultOpen);
-  const reduce = useReducedMotion();
   const ok = steps.filter((s) => s.state === 'ok').length;
   if (ok === steps.length) return null;
   return (
@@ -118,9 +117,7 @@ export function SetupChecklist({ title, steps, defaultOpen = true }: { title: st
             const [kind, label] = STEP_TAG[s.state];
             return (
               <div className="srow" key={s.id}>
-                <motion.span className={cx('sic', s.state)} initial={false} animate={reduce ? undefined : { scale: [0.6, 1] }} key={s.state} transition={{ type: 'spring', stiffness: 500, damping: 20 }}>
-                  {s.state === 'ok' || s.state === 'done' ? <Icon name="check" /> : null}
-                </motion.span>
+                <StatusMark state={s.state} burst />
                 <span><b>{s.title}</b><span className="s">{s.detail}</span></span>
                 <span className="ra"><Tag kind={kind}>{label}</Tag>{s.action}</span>
               </div>
@@ -134,11 +131,12 @@ export function SetupChecklist({ title, steps, defaultOpen = true }: { title: st
 
 /* ───────── Live monitor ───────── */
 
-export function StatusStrip({ live, status, items, tag }: { live: boolean; status: string; items: ReactNode[]; tag?: ReactNode }): ReactElement {
+/** Status strip: the live dot beats when `tick` changes (a packet, an event) and shows the running count. */
+export function StatusStrip({ live, status, items, tag, tick, count }: { live: boolean; status: string; items: ReactNode[]; tag?: ReactNode; tick?: number | string; count?: number }): ReactElement {
   return (
     <div className="panel">
       <div className="status-strip">
-        <div className="big">{live ? <span className="live" /> : null}{status}</div>
+        <div className="big"><Heartbeat live={live} tick={tick} count={count} label={status} />{status}</div>
         {items.map((it, i) => <span className="muted" key={i}>{it}</span>)}
         {tag ? <span style={{ marginLeft: 'auto' }}>{tag}</span> : null}
       </div>
@@ -154,7 +152,7 @@ export function Pipeline({ steps, live = true, onVerify }: { steps: PipelineStep
     <div className="timeline" style={{ gridTemplateColumns: `repeat(${steps.length}, 1fr)` }}>
       {steps.map((s, i) => (
         <div key={s.label} className={cx('ts', s.state === 'wait' && 'wait', s.state === 'done' && 'done')} style={{ ['--i' as string]: i }}>
-          <i>{s.state === 'wait' ? null : <Icon name="check" />}</i>
+          <i><StatusMark state={s.state} /></i>
           <b>{s.label}</b>
           <span>{s.detail}</span>
           {s.state === 'done' && onVerify ? <Button size="sm" variant="ghost" className="chk" onClick={() => onVerify(i)}>Check now</Button> : null}

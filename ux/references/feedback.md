@@ -9,7 +9,7 @@
 | over 10 s | the line says it's taking longer than usual and offers Retry. Never spin forever. |
 
 - Refreshing data already on screen: keep it visible, say "Refreshing…" in the header. Never blank a page that has data.
-- Spinners for buttons and one-line status; skeletons for content; pixel-block bar for known-length work (exports).
+- Spinners for buttons; the **lattice** (`.lattice`, a 3 × 3 pixel grid lighting cells in a pattern) for status lines, panel headers and NutBot thinking: it says how long so far and turns into a check or a cross when the wait ends ("Done in 2.3 s", "Failed after 8.1 s"); skeletons for content; pixel-block bar for known-length work (exports).
 
 ## Errors: where they go
 | What failed | Where | How long |

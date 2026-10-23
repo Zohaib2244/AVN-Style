@@ -30,6 +30,7 @@ The **contract** (`contract.md`) is the list of roles a style fills and the UX u
 |---|---|---|
 | AVN Family | calm warm dark, Pixelify titles, pixel icons, personal flavour | `styles/avn-family/` |
 | Nutstyle | AVN Hub's chunky sticker cards, DotGothic, offset shadows | `styles/nutstyle/` |
+| Pocket | a handheld console in cream: cream shell / olive LCD, Space Grotesk + Inter + JetBrains Mono, keys that press, four shell palettes | `styles/pocket/` |
 | New style | copy the template | `styles/_template/` |
 
 AVN Hub's own screen architecture is separate: `avnhub-design/` (uses Nutstyle).

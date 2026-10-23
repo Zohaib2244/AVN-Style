@@ -11,6 +11,9 @@ All three share one popover (`.pop`). Desktop/tablet: opens under its control, a
 
 ## Single-select list (range preset, sort, platform)
 - Same rows, no checkboxes; a tick marks the current option and its text goes bold.
+- One **pill** (`.pop-pill`) glides between rows under the pointer and the arrow keys; it remembers its row when the pointer leaves. Pressing and dragging over the rows scrubs the pill; releasing picks.
+- The field button's label swaps with a tiny upward slide when the value changes.
+- Type a letter to jump to the next option starting with it.
 - The right slot holds a hint instead of a count (e.g. the date span).
 - Picking applies and closes. "Custom range…" opens the calendar.
 

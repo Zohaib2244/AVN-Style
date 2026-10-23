@@ -2,7 +2,7 @@
    AVN Family · tokens.css
    Fills every role in /contract.md. Dark is the default; light follows the
    system unless <html data-theme="light|dark"> is set.
-   Palettes: none = Nutmeg (default) · slate · moss · hibiscus · white
+   Palettes: none = Nutmeg (default) · slate · moss · hibiscus · white · chiral · dora
    Select with <html data-palette="…">. Status hues stay constant across
    palettes except White build, whose status colours follow the four face
    buttons of a controller.
@@ -21,6 +21,7 @@
   --font-label: var(--font-mono); --font-btn: var(--font-ui); --tt-btn: none; --ls-btn: normal;
   --num: var(--text); --w-display: 500;
   --ease: cubic-bezier(.2, .8, .2, 1);
+  --ease-spring: linear(0, .0603, .2033, .3821, .5633, .7258, .8584, .9574, 1.0242, 1.0634, 1.0809, 1.0828, 1.0747, 1.0613, 1.046, 1.0313, 1.0186, 1.0085, 1.0012, .9965, .994, .9931, .9933, .9941, .9953, .9966, .9978, .9988, 1);
 
   --bg: light-dark(#ece5d8, #14110d);
   --panel: light-dark(#f8f4ec, #1c1713);
@@ -75,4 +76,14 @@
   --bg: light-dark(#eadde0, #150b0e); --panel: light-dark(#faf2f4, #1f1115); --nested: light-dark(#f3e7ea, #190d11); --raise: light-dark(#ecdde1, #2a171d);
   --line: light-dark(#dcc5cb, #3b2229); --line-strong: light-dark(#a88892, #5c3540); --text: light-dark(#24101a, #f1dfe3); --muted: light-dark(#5a3f47, #bfa4ab); --dim: light-dark(#74545e, #94787f);
   --accent: light-dark(#b0204a, #e0476b); --accent-ink: light-dark(#fff4f6, #1a070c); --dot: light-dark(rgba(36,16,26,.04), rgba(241,223,227,.028));
+}
+:root[data-palette="chiral"] {
+  --bg: light-dark(#e3e9ef, #070b12); --panel: light-dark(#f2f6fa, #0d131c); --nested: light-dark(#e9eff4, #0a0f17); --raise: light-dark(#dfe6ed, #141c27);
+  --line: light-dark(#c5cfd9, #1b2532); --line-strong: light-dark(#8a99a9, #35475a); --text: light-dark(#121a23, #dce8f2); --muted: light-dark(#3f4e5e, #a7b6c6); --dim: light-dark(#5a6b7d, #7b8a9b);
+  --accent: light-dark(#0b6f8a, #7fe5ff); --accent-ink: light-dark(#f0fbff, #04161d); --dot: light-dark(rgba(18,26,35,.04), rgba(220,232,242,.03));
+}
+:root[data-palette="dora"] {
+  --bg: light-dark(#ede8e0, #0c0b0a); --panel: light-dark(#faf7f2, #151312); --nested: light-dark(#f3eee6, #100f0e); --raise: light-dark(#e9e3da, #1f1c1a);
+  --line: light-dark(#d9d1c5, #2a2624); --line-strong: light-dark(#a89e90, #46403b); --text: light-dark(#1b1713, #efe9e1); --muted: light-dark(#564f47, #b1aaa3); --dim: light-dark(#716960, #8a837b);
+  --accent: light-dark(#9e5e00, #ffb020); --accent-ink: light-dark(#fff8ec, #1c1104); --dot: light-dark(rgba(27,23,19,.04), rgba(239,233,225,.028));
 }

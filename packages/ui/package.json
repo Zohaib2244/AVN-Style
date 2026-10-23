@@ -1,6 +1,6 @@
 {
   "name": "@avn/ui",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Shared React components for AVN dashboards and tools (plain CSS, Motion animation)",
   "type": "module",
   "license": "UNLICENSED",

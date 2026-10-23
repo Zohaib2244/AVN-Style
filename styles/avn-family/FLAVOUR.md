@@ -13,14 +13,14 @@ gamer name **nutmag2469** (the nut theme comes from it) · dried hibiscus · Dea
 
 | Motif | Job | Where |
 |---|---|---|
-| **Dora** (black cat, amber eyes) | means "nothing needs you": asleep on the monitor when there's nothing to look at | "Needs a look" empty state |
+| **Dora** (black cat, amber eyes) | means "nothing needs you": asleep on the monitor when there's nothing to look at; the **Dora** palette, black and amber | "Needs a look" empty state, palettes |
 | **The nut** | default palette **Nutmeg**; **NutBot** the helper; the icon spark as status light | palettes, NutBot, icons |
 | **HP mini PC** | the server in pictures; the Server status page; "no events yet" scene | server status, empty states |
 | **White PC and controller** | **White build** palette; status colours follow the four face buttons | palettes |
 | **Dried hibiscus** | the **Hibiscus** palette, deep crimson | palettes |
-| **Deliveries and strands** (Death Stranding mood) | batches "delivered" to the mini PC; packets travelling along a live pipeline | Data health |
+| **Deliveries and strands** (Death Stranding mood) | batches "delivered" to the mini PC; packets travelling along a live pipeline; the **Chiral** palette, blue-black with a cyan-white accent | Data health, palettes |
 | **Blocks** (Minecraft Dungeons mood) | isometric block piles for empty pages, dropping in once | empty states |
-| **Starry nights** (Star Wars mood) | pixel starfield behind the boot | boot |
+| **Starry nights** (Star Wars mood) | pixel starfield behind the boot; the quiet-night scene when a range has no events: a block horizon, stars that twinkle out of step, one slow comet | boot, quiet-night empty state |
 | **A caring helper** (Baymax mood) | NutBot's checkups: gentle, healthy things first, then what needs care, then an offer to help | NutBot |
 | **Controller habits** | everything reachable by keyboard; Ctrl / shows keycaps | shortcuts |
 
@@ -32,4 +32,4 @@ gamer name **nutmag2469** (the nut theme comes from it) · dried hibiscus · Dea
 - Respect reduced motion: scenes show their still frame.
 
 ## Ideas not built yet
-Isometric pixel rooms for bigger empty states · a "quiet night" empty state with stars when a range has no events · controller-button glyphs on shortcut keycaps.
+Isometric pixel rooms for bigger empty states · controller-button glyphs on shortcut keycaps.
